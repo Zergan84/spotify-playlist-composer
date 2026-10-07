@@ -780,35 +780,67 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     /* ===================================================
        EDITOR MODAL ULTRA-MINIMALIST SPOTIFY STYLING
        =================================================== */
-    .editor-header-grid {
-      display: grid;
-      grid-template-columns: 130px 1fr;
-      gap: 16px;
-      align-items: start;
+    .editor-modal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+      flex: 1;
     }
 
-    @media (max-width: 580px) {
-      .editor-header-grid {
-        grid-template-columns: 1fr;
-      }
+    .editor-header-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 320px;
+    }
+
+    .editor-header-badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    .editor-header-badge.badge-pub {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    .editor-header-badge.badge-priv {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    .editor-header-grid {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 14px;
+      align-items: stretch;
     }
 
     .editor-cover-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
     }
 
     .editor-cover-wrap {
-      width: 130px;
-      height: 130px;
-      border-radius: 8px;
+      width: 88px;
+      height: 88px;
+      border-radius: 6px;
       overflow: hidden;
       background: #282828;
       position: relative;
       border: 1px solid var(--border-subtle);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
       flex-shrink: 0;
     }
 
@@ -831,21 +863,21 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     /* Floating Mini On-Cover Action Icons in Editor */
     .editor-cover-icon-btn {
       position: absolute;
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: rgba(18, 18, 18, 0.85);
+      background: rgba(18, 18, 18, 0.88);
       backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.76rem;
+      font-size: 0.68rem;
       cursor: pointer;
       transition: all 0.15s ease;
       z-index: 6;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     .editor-cover-icon-btn:hover {
@@ -856,41 +888,49 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .editor-cover-btn-privacy {
-      top: 6px;
-      left: 6px;
+      top: 4px;
+      left: 4px;
     }
 
     .editor-cover-btn-generate {
-      top: 6px;
-      right: 6px;
+      top: 4px;
+      right: 4px;
     }
 
     .editor-cover-btn-upload {
-      bottom: 6px;
-      right: 6px;
-    }
-
-    .mini-vis-badge {
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: var(--radius-full);
-      font-weight: 600;
-    }
-
-    .mini-vis-badge.badge-pub {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-    }
-
-    .mini-vis-badge.badge-priv {
-      background: rgba(255, 255, 255, 0.08);
-      color: #cbd5e1;
+      bottom: 4px;
+      right: 4px;
     }
 
     .editor-meta-fields {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      height: 88px;
+      gap: 8px;
+    }
+
+    .editor-field-row {
+      display: flex;
+      align-items: center;
       gap: 10px;
+      height: 40px;
+    }
+
+    .editor-field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      width: 70px;
+      flex-shrink: 0;
+    }
+
+    .editor-field-input {
+      flex: 1;
+      height: 40px;
+      padding: 0 12px;
+      font-size: 0.85rem;
+      border-radius: 4px;
     }
 
     .editor-search-bar-wrap {
@@ -1776,19 +1816,23 @@ Depeche Mode - Enjoy the Silence"></textarea>
   <!-- Modal: Playlist Editor -->
   <div id="editor-modal" class="modal-overlay">
     <div class="modal-card" style="max-width: 680px;">
-      <div class="modal-header" style="padding: 14px 20px;">
-        <div class="modal-title" style="font-size: 1.15rem;">✏️ Редактирование плейлиста</div>
+      <div class="modal-header" style="padding: 12px 20px;">
+        <div class="editor-modal-header-left">
+          <span id="editor-header-title" class="editor-header-title">Плейлист</span>
+          <span id="editor-header-count" class="editor-header-badge">0 треков</span>
+          <span id="editor-header-vis" class="editor-header-badge badge-priv">🔒 Закрытый</span>
+        </div>
         <button id="btn-close-editor-modal" class="modal-close">&times;</button>
       </div>
 
       <div class="modal-body" style="gap: 14px; padding: 16px 20px;">
-        <!-- Top: Cover with On-Cover Action Icons & Metadata -->
+        <!-- Top: Cover Block and Name/Description Block (equal height: 88px) -->
         <div class="editor-header-grid">
           <div class="editor-cover-section">
             <div class="editor-cover-wrap" id="editor-cover-preview-wrap">
               <img id="editor-cover-preview" class="editor-cover-img" src="" alt="Cover" style="display: none;">
               <div id="editor-cover-placeholder" class="editor-cover-placeholder">
-                <svg style="width: 40px; height: 40px; fill: currentColor;" viewBox="0 0 24 24">
+                <svg style="width: 32px; height: 32px; fill: currentColor;" viewBox="0 0 24 24">
                   <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                 </svg>
               </div>
@@ -1808,28 +1852,26 @@ Depeche Mode - Enjoy the Silence"></textarea>
             </div>
 
             <input type="file" id="editor-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
-            <div id="editor-cover-status" style="font-size: 0.68rem; color: var(--spotify-green); text-align: center; min-height: 12px; max-width: 130px; line-height: 1.2;"></div>
+            <div id="editor-cover-status" style="font-size: 0.65rem; color: var(--spotify-green); text-align: center; min-height: 10px; max-width: 88px; line-height: 1.1;"></div>
             <canvas id="cover-canvas" width="640" height="640" style="display: none;"></canvas>
           </div>
 
           <div class="editor-meta-fields">
-            <div class="form-group">
-              <div class="form-label" style="margin-bottom: 3px;">
-                <span>Название</span>
-                <span id="editor-vis-label-badge" class="mini-vis-badge badge-priv">🔒 Закрытый</span>
-              </div>
-              <input type="text" id="editor-name-input" class="form-input" style="padding: 8px 12px; font-size: 0.88rem;" placeholder="Название плейлиста...">
+            <div class="editor-field-row">
+              <label class="editor-field-label" for="editor-name-input">Название</label>
+              <input type="text" id="editor-name-input" class="form-input editor-field-input" placeholder="Название плейлиста">
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="editor-desc-input" style="margin-bottom: 3px;">Описание</label>
-              <textarea id="editor-desc-input" class="form-input" rows="2" style="padding: 8px 12px; font-size: 0.82rem; resize: none;" placeholder="Краткое описание..."></textarea>
+            <div class="editor-field-row">
+              <label class="editor-field-label" for="editor-desc-input">Описание</label>
+              <input type="text" id="editor-desc-input" class="form-input editor-field-input" placeholder="Введите описание плейлиста">
             </div>
 
             <!-- Hidden compatibility elements for existing event queries -->
             <div style="display: none;">
               <div id="editor-vis-private"></div>
               <div id="editor-vis-public"></div>
+              <span id="editor-vis-label-badge"></span>
             </div>
           </div>
         </div>
@@ -2386,6 +2428,23 @@ Depeche Mode - Enjoy the Silence"></textarea>
       document.getElementById('btn-logout').addEventListener('click', logout);
     }
 
+    function getPlaylistTrackCount(pl) {
+      if (!pl) return 0;
+      if (typeof pl.tracksCount === 'number') return pl.tracksCount;
+      if (pl.tracks && typeof pl.tracks.total === 'number') return pl.tracks.total;
+      if (pl.items && typeof pl.items.total === 'number') return pl.items.total;
+      if (typeof pl.total === 'number') return pl.total;
+      if (typeof pl.total_tracks === 'number') return pl.total_tracks;
+      if (Array.isArray(pl.tracks)) return pl.tracks.length;
+      if (Array.isArray(pl.items)) return pl.items.length;
+      return 0;
+    }
+
+    function getCleanDesc(desc) {
+      if (!desc || desc === 'null' || desc === 'undefined') return '';
+      return String(desc).trim();
+    }
+
     async function loadPlaylists() {
       playlistsContainer.innerHTML = '<div class="empty-state">Загрузка плейлистов...</div>';
       try {
@@ -2400,22 +2459,41 @@ Depeche Mode - Enjoy the Silence"></textarea>
     }
 
     async function enrichPlaylistDates() {
-      for (const pl of cachedPlaylists) {
-        try {
-          let tracksData = null;
+      const batchSize = 6;
+      for (let i = 0; i < cachedPlaylists.length; i += batchSize) {
+        const batch = cachedPlaylists.slice(i, i + batchSize);
+        await Promise.all(batch.map(async pl => {
           try {
-            tracksData = await spotifyApi(\`/playlists/\${pl.id}/items?limit=1&fields=items(added_at)\`);
-          } catch (_) {
-            tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=items(added_at)\`);
+            let tracksData = null;
+            try {
+              tracksData = await spotifyApi(\`/playlists/\${pl.id}/items?limit=1&fields=total,items(added_at)\`);
+            } catch (_) {
+              try {
+                tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=total,items(added_at)\`);
+              } catch (_) {
+                tracksData = await spotifyApi(\`/playlists/\${pl.id}?fields=total,tracks.total,items.total\`);
+              }
+            }
+
+            const count = tracksData?.total ?? tracksData?.tracks?.total ?? tracksData?.items?.total ?? tracksData?.items?.length;
+            if (typeof count === 'number') {
+              pl.tracksCount = count;
+              const noun = getTrackNoun(count);
+              document.querySelectorAll(\`.tracks-count-\${pl.id}\`).forEach(el => {
+                el.textContent = \`\${count} \${noun}\`;
+              });
+            }
+
+            if (tracksData?.items?.[0]?.added_at) {
+              const dateStr = formatDate(tracksData.items[0].added_at);
+              document.querySelectorAll(\`.date-\${pl.id}\`).forEach(el => {
+                el.textContent = dateStr;
+              });
+            }
+          } catch (e) {
+            // ignore individual playlist enrichment error
           }
-          if (tracksData?.items?.[0]?.added_at) {
-            const dateStr = formatDate(tracksData.items[0].added_at);
-            const dateElems = document.querySelectorAll(\`.date-\${pl.id}\`);
-            dateElems.forEach(el => el.textContent = dateStr);
-          }
-        } catch (e) {
-          // ignore background date fetch error
-        }
+        }));
       }
     }
 
@@ -2456,7 +2534,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
              </div>\`;
 
         const isPublic = pl.public !== false;
-        const totalTracks = pl.tracks?.total || 0;
+        const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
         const spotifyUrl = pl.external_urls?.spotify || '#';
 
@@ -2478,7 +2556,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
             <div class="playlist-info">
               <div class="playlist-title">\${escapeHtml(pl.name)}</div>
               <div class="playlist-meta-row">
-                <span>\${totalTracks} \${trackNoun}</span>
+                <span class="tracks-count-\${pl.id}">\${totalTracks} \${trackNoun}</span>
                 <span class="playlist-dot">•</span>
                 <span class="date-\${pl.id}">Плейлист</span>
               </div>
@@ -2501,7 +2579,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
              </div>\`;
 
         const isPublic = pl.public !== false;
-        const totalTracks = pl.tracks?.total || 0;
+        const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
 
         return \`
@@ -2519,7 +2597,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
               </div>
             </div>
             <div class="compact-title">\${escapeHtml(pl.name)}</div>
-            <div class="compact-tracks-count">\${totalTracks} \${trackNoun}</div>
+            <div class="compact-tracks-count tracks-count-\${pl.id}">\${totalTracks} \${trackNoun}</div>
           </div>
         \`;
       }).join('');
@@ -2538,7 +2616,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
              </div>\`;
 
         const isPublic = pl.public !== false;
-        const totalTracks = pl.tracks?.total || 0;
+        const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
         const spotifyUrl = pl.external_urls?.spotify || '#';
 
@@ -2552,7 +2630,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
               <div class="list-row-info">
                 <div class="list-row-title">\${escapeHtml(pl.name)}</div>
                 <div class="list-row-sub">
-                  <span>\${totalTracks} \${trackNoun}</span>
+                  <span class="tracks-count-\${pl.id}">\${totalTracks} \${trackNoun}</span>
                   <span class="playlist-dot">•</span>
                   <span class="date-\${pl.id}">Плейлист</span>
                 </div>
@@ -2615,10 +2693,13 @@ Depeche Mode - Enjoy the Silence"></textarea>
       const cached = cachedPlaylists.find(p => p.id === playlistId) || {};
       const isOwner = !currentUser || !cached.owner || (currentUser.id && cached.owner.id === currentUser.id);
 
+      const initialTracksCount = getPlaylistTrackCount(cached);
+      const cleanDesc = getCleanDesc(cached.description);
+
       editingState = {
         id: playlistId,
         name: cached.name || '',
-        description: cached.description || '',
+        description: cleanDesc,
         isPublic: cached.public !== false,
         coverUrl: cached.images?.[0]?.url || null,
         newCoverBase64: null,
@@ -2629,8 +2710,18 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       editorNameInput.value = editingState.name;
       editorDescInput.value = editingState.description;
-      editorTracksCount.textContent = cached.tracks?.total || '0';
+      editorTracksCount.textContent = initialTracksCount;
       editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 24px;">Загрузка треков...</div>';
+
+      const headerTitle = document.getElementById('editor-header-title');
+      const headerCount = document.getElementById('editor-header-count');
+      if (headerTitle) headerTitle.textContent = editingState.name || 'Плейлист';
+      if (headerCount) headerCount.textContent = \`\${initialTracksCount} \${getTrackNoun(initialTracksCount)}\`;
+
+      editorNameInput.oninput = () => {
+        const val = editorNameInput.value.trim();
+        if (headerTitle) headerTitle.textContent = val || 'Плейлист';
+      };
 
       updateEditorVisChips(editingState.isPublic);
 
@@ -2661,7 +2752,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         plData = await spotifyApi('/playlists/' + playlistId);
         if (plData) {
           editingState.name = plData.name || editingState.name;
-          editingState.description = plData.description || editingState.description;
+          editingState.description = getCleanDesc(plData.description ?? editingState.description);
           editingState.isPublic = plData.public !== false;
           if (plData.images?.[0]?.url) {
             editingState.coverUrl = plData.images[0].url;
@@ -2671,6 +2762,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
           }
           editorNameInput.value = editingState.name;
           editorDescInput.value = editingState.description;
+          if (headerTitle) headerTitle.textContent = editingState.name || 'Плейлист';
           updateEditorVisChips(editingState.isPublic);
         }
       } catch (eMeta) {
@@ -2729,10 +2821,15 @@ Depeche Mode - Enjoy the Silence"></textarea>
       editingState.isPublic = isPublic;
       const visIcon = document.getElementById('editor-vis-icon');
       const visBadge = document.getElementById('editor-vis-label-badge');
+      const headerVis = document.getElementById('editor-header-vis');
       if (visIcon) visIcon.textContent = isPublic ? '🌐' : '🔒';
       if (visBadge) {
         visBadge.textContent = isPublic ? '🌐 Публичный' : '🔒 Закрытый';
         visBadge.className = 'mini-vis-badge ' + (isPublic ? 'badge-pub' : 'badge-priv');
+      }
+      if (headerVis) {
+        headerVis.textContent = isPublic ? '🌐 Публичный' : '🔒 Закрытый';
+        headerVis.className = 'editor-header-badge ' + (isPublic ? 'badge-pub' : 'badge-priv');
       }
       if (editorVisPublic) editorVisPublic.classList.toggle('selected', isPublic);
       if (editorVisPrivate) editorVisPrivate.classList.toggle('selected', !isPublic);
@@ -2756,7 +2853,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
     btnCancelEditor.addEventListener('click', closeEditorModal);
 
     function renderEditorTracks() {
-      editorTracksCount.textContent = editingState.tracks.length;
+      const count = editingState.tracks.length;
+      editorTracksCount.textContent = count;
+      const headerCount = document.getElementById('editor-header-count');
+      if (headerCount) {
+        headerCount.textContent = \`\${count} \${getTrackNoun(count)}\`;
+      }
 
       if (!editingState.tracks.length) {
         editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 24px;">В этом плейлисте нет треков. Найдите и добавьте треки выше!</div>';
