@@ -504,7 +504,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-lg);
       width: 100%;
-      max-width: 680px;
+      max-width: 780px;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
@@ -727,6 +727,160 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       border: 1px dashed var(--border-subtle);
       border-radius: var(--radius-md);
       grid-column: 1 / -1;
+    }
+
+    /* Review Stage */
+    .review-summary-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 700px) {
+      .review-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .review-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      min-height: 280px;
+    }
+
+    .review-col-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .review-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .track-card-found {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+    }
+
+    .track-thumb {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: #111;
+      flex-shrink: 0;
+    }
+
+    .track-found-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .track-found-name {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-found-artist {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-not-found-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(239, 68, 68, 0.06);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+    }
+
+    .track-not-found-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .query-edit-input {
+      flex: 1;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      color: #fff;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+
+    .query-edit-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+
+    .btn-icon-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.4);
     }
 
     footer {
@@ -960,6 +1114,50 @@ Depeche Mode - Enjoy the Silence"></textarea>
         <div id="live-track-log" class="live-track-log"></div>
       </div>
 
+      <!-- Stage 3: Review View (Добавлено & Не найдено) -->
+      <div class="modal-body" id="modal-review-view" style="display: none;">
+        <div class="review-summary-banner">
+          <div>
+            <strong id="review-playlist-title-display">Название плейлиста</strong>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
+              Проверьте результаты поиска перед добавлением в Spotify
+            </div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span id="badge-found-count" class="badge-status badge-public">0 найдено</span>
+            <span id="badge-notfound-count" class="badge-status badge-private">0 не найдено</span>
+          </div>
+        </div>
+
+        <div class="review-grid">
+          <!-- Col 1: Добавлено (найдено) -->
+          <div class="review-column">
+            <div class="review-col-header">
+              <span style="color: #4ade80;">✅ Добавлено (<span id="col-found-count">0</span>)</span>
+              <button type="button" id="btn-clear-all-found" class="btn btn-secondary btn-sm" style="font-size: 0.7rem; padding: 2px 8px;">
+                Очистить
+              </button>
+            </div>
+            <div id="review-found-list" class="review-items-list">
+              <!-- Found items dynamically rendered here -->
+            </div>
+          </div>
+
+          <!-- Col 2: Не найдено -->
+          <div class="review-column">
+            <div class="review-col-header">
+              <span style="color: #f87171;">❌ Не найдено (<span id="col-notfound-count">0</span>)</span>
+              <button type="button" id="btn-delete-all-notfound" class="btn btn-secondary btn-sm" style="font-size: 0.7rem; padding: 2px 8px; color: #f87171;">
+                Удалить все
+              </button>
+            </div>
+            <div id="review-notfound-list" class="review-items-list">
+              <!-- Not found items dynamically rendered here with inputs and search buttons -->
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Success View -->
       <div class="modal-body" id="modal-success-view" style="display: none;">
         <div class="success-panel">
@@ -980,8 +1178,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       <div class="modal-footer" id="modal-footer">
         <button id="btn-cancel-modal" class="btn btn-secondary btn-sm">Отмена</button>
-        <button id="btn-start-composition" class="btn btn-spotify">
-          🚀 Найти треки и создать
+        <button id="btn-back-to-form" class="btn btn-secondary btn-sm" style="display: none;">⬅️ Назад к тексту</button>
+        <button id="btn-find-tracks" class="btn btn-spotify">
+          🔍 Найти треки в Spotify
+        </button>
+        <button id="btn-commit-playlist" class="btn btn-spotify" style="display: none;">
+          🚀 Создать плейлист в Spotify
         </button>
       </div>
     </div>
@@ -1035,9 +1237,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const btnCancelModal = document.getElementById('btn-cancel-modal');
     const modalFormView = document.getElementById('modal-form-view');
     const modalProgressView = document.getElementById('modal-progress-view');
+    const modalReviewView = document.getElementById('modal-review-view');
     const modalSuccessView = document.getElementById('modal-success-view');
     const modalFooter = document.getElementById('modal-footer');
-    const btnStartComposition = document.getElementById('btn-start-composition');
+    const btnBackToForm = document.getElementById('btn-back-to-form');
+    const btnFindTracks = document.getElementById('btn-find-tracks');
+    const btnCommitPlaylist = document.getElementById('btn-commit-playlist');
     const playlistNameInput = document.getElementById('playlist-name-input');
     const playlistDescInput = document.getElementById('playlist-desc-input');
     const visPrivate = document.getElementById('vis-private');
@@ -1050,6 +1255,15 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const progressStatusLabel = document.getElementById('progress-status-label');
     const progressStatusPercentage = document.getElementById('progress-status-percentage');
     const liveTrackLog = document.getElementById('live-track-log');
+    const reviewPlaylistTitleDisplay = document.getElementById('review-playlist-title-display');
+    const badgeFoundCount = document.getElementById('badge-found-count');
+    const badgeNotfoundCount = document.getElementById('badge-notfound-count');
+    const colFoundCount = document.getElementById('col-found-count');
+    const colNotfoundCount = document.getElementById('col-notfound-count');
+    const reviewFoundList = document.getElementById('review-found-list');
+    const reviewNotfoundList = document.getElementById('review-notfound-list');
+    const btnClearAllFound = document.getElementById('btn-clear-all-found');
+    const btnDeleteAllNotfound = document.getElementById('btn-delete-all-notfound');
     const successSummaryText = document.getElementById('success-summary-text');
     const btnOpenSpotifyLink = document.getElementById('btn-open-spotify-link');
     const btnCreateAnother = document.getElementById('btn-create-another');
@@ -1539,18 +1753,33 @@ Depeche Mode - Enjoy the Silence"></textarea>
       updateTracksCount();
     });
 
+    // Review and composer state
+    let reviewState = {
+      playlistName: '',
+      playlistDesc: '',
+      isPublic: false,
+      foundTracks: [],
+      notFoundTracks: []
+    };
+
     function resetComposerModal() {
       modalFormView.style.display = 'flex';
       modalProgressView.style.display = 'none';
+      modalReviewView.style.display = 'none';
       modalSuccessView.style.display = 'none';
       modalFooter.style.display = 'flex';
-      btnStartComposition.disabled = false;
+      btnBackToForm.style.display = 'none';
+      btnFindTracks.style.display = 'inline-flex';
+      btnCommitPlaylist.style.display = 'none';
+      btnFindTracks.disabled = false;
       progressBarFill.style.width = '0%';
       liveTrackLog.innerHTML = '';
+      reviewState.foundTracks = [];
+      reviewState.notFoundTracks = [];
     }
 
-    // Composer Execution: Search tracks & create playlist
-    btnStartComposition.addEventListener('click', async () => {
+    // Step 1: Click "Найти треки в Spotify"
+    btnFindTracks.addEventListener('click', async () => {
       const name = playlistNameInput.value.trim();
       if (!name) {
         alert('Пожалуйста, укажите название плейлиста');
@@ -1565,21 +1794,25 @@ Depeche Mode - Enjoy the Silence"></textarea>
         return;
       }
 
+      reviewState.playlistName = name;
+      reviewState.playlistDesc = playlistDescInput.value.trim();
+      reviewState.isPublic = isPublicSelection;
+      reviewState.foundTracks = [];
+      reviewState.notFoundTracks = [];
+
       // Switch to progress view
       modalFormView.style.display = 'none';
       modalProgressView.style.display = 'block';
+      modalReviewView.style.display = 'none';
       modalFooter.style.display = 'none';
 
       liveTrackLog.innerHTML = '';
-      progressStatusLabel.textContent = 'Начинаем поиск треков...';
+      progressStatusLabel.textContent = 'Начинаем поиск треков в Spotify...';
       progressBarFill.style.width = '0%';
       progressStatusPercentage.textContent = '0%';
 
-      const foundTrackUris = [];
-      const notFoundTracks = [];
       const total = trackLines.length;
 
-      // 1. Search tracks
       for (let i = 0; i < total; i++) {
         const query = trackLines[i];
         const logItem = document.createElement('div');
@@ -1593,17 +1826,31 @@ Depeche Mode - Enjoy the Silence"></textarea>
           const track = searchRes?.tracks?.items?.[0];
 
           if (track) {
-            foundTrackUris.push(track.uri);
-            const artist = track.artists?.map(a => a.name).join(', ') || '';
+            const artists = track.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+            const img = track.album?.images?.[track.album.images.length - 1]?.url || track.album?.images?.[0]?.url || '';
+            reviewState.foundTracks.push({
+              id: 'f_' + Math.random().toString(36).substring(2, 9),
+              query: query,
+              uri: track.uri,
+              name: track.name,
+              artists: artists,
+              image: img
+            });
             logItem.className = 'log-item found';
-            logItem.textContent = \`✅ Найдено: \${artist} — \${track.name}\`;
+            logItem.textContent = \`✅ Найдено: \${artists} — \${track.name}\`;
           } else {
-            notFoundTracks.push(query);
+            reviewState.notFoundTracks.push({
+              id: 'nf_' + Math.random().toString(36).substring(2, 9),
+              query: query
+            });
             logItem.className = 'log-item not-found';
             logItem.textContent = \`❌ Не найдено: \${query}\`;
           }
         } catch (err) {
-          notFoundTracks.push(query);
+          reviewState.notFoundTracks.push({
+            id: 'nf_' + Math.random().toString(36).substring(2, 9),
+            query: query
+          });
           logItem.className = 'log-item not-found';
           logItem.textContent = \`⚠️ Ошибка поиска: \${query}\`;
         }
@@ -1613,38 +1860,206 @@ Depeche Mode - Enjoy the Silence"></textarea>
         progressStatusPercentage.textContent = pct + '%';
         progressStatusLabel.textContent = \`Обработано \${i + 1} из \${total}\`;
 
-        // Small throttle to avoid hitting strict rate limits
         if (i < total - 1) {
-          await new Promise(r => setTimeout(r, 60));
+          await new Promise(r => setTimeout(r, 50));
         }
       }
 
-      if (!foundTrackUris.length) {
-        progressStatusLabel.textContent = 'Не найдено ни одного трека из списка.';
-        alert('К сожалению, ни один трек из указанного списка не был найден в Spotify.');
-        resetComposerModal();
+      // Transition to Review Stage
+      showReviewStage();
+    });
+
+    function showReviewStage() {
+      modalProgressView.style.display = 'none';
+      modalFormView.style.display = 'none';
+      modalReviewView.style.display = 'flex';
+      modalFooter.style.display = 'flex';
+      btnFindTracks.style.display = 'none';
+      btnBackToForm.style.display = 'inline-flex';
+      btnCommitPlaylist.style.display = 'inline-flex';
+
+      reviewPlaylistTitleDisplay.textContent = reviewState.playlistName || 'Новый плейлист';
+      renderReviewLists();
+    }
+
+    function renderReviewLists() {
+      const foundCount = reviewState.foundTracks.length;
+      const notFoundCount = reviewState.notFoundTracks.length;
+
+      badgeFoundCount.textContent = \`\${foundCount} найдено\`;
+      colFoundCount.textContent = foundCount;
+
+      badgeNotfoundCount.textContent = \`\${notFoundCount} не найдено\`;
+      colNotfoundCount.textContent = notFoundCount;
+
+      btnCommitPlaylist.textContent = \`🚀 Создать плейлист (\${foundCount} треков)\`;
+      btnCommitPlaylist.disabled = foundCount === 0;
+
+      // Render Found List
+      if (foundCount === 0) {
+        reviewFoundList.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 24px 8px;">Нет найденных треков. Отредактируйте не найденные или вернитесь назад.</div>';
+      } else {
+        reviewFoundList.innerHTML = reviewState.foundTracks.map(item => \`
+          <div class="track-card-found" id="item-\${item.id}">
+            <div class="found-info">
+              \${item.image ? \`<img src="\${escapeHtml(item.image)}" class="track-thumb" alt="Cover">\` : '<div class="track-thumb"></div>'}
+              <div class="track-found-meta">
+                <div class="track-found-name" title="\${escapeHtml(item.name)}">\${escapeHtml(item.name)}</div>
+                <div class="track-found-artist" title="\${escapeHtml(item.artists)}">\${escapeHtml(item.artists)}</div>
+              </div>
+            </div>
+            <button type="button" class="btn-remove-track" title="Удалить из добавленных" onclick="removeFoundTrack('\${item.id}')">✕</button>
+          </div>
+        \`).join('');
+      }
+
+      // Render Not Found List
+      if (notFoundCount === 0) {
+        reviewNotfoundList.innerHTML = '<div style="color: #4ade80; font-size: 0.82rem; text-align: center; padding: 24px 8px;">🎉 Все треки успешно найдены в Spotify!</div>';
+      } else {
+        reviewNotfoundList.innerHTML = reviewState.notFoundTracks.map(item => \`
+          <div class="track-not-found-card" id="item-\${item.id}">
+            <div class="track-not-found-row">
+              <input type="text" class="query-edit-input" id="input-\${item.id}" value="\${escapeHtml(item.query)}" placeholder="Введите название...">
+              <button type="button" class="btn-icon" title="Искать снова" onclick="retrySingleTrack('\${item.id}')">🔍 Искать</button>
+              <button type="button" class="btn-icon btn-icon-danger" title="Удалить" onclick="removeNotFoundTrack('\${item.id}')">✕</button>
+            </div>
+            <div id="status-\${item.id}" style="font-size: 0.72rem; color: #fca5a5;"></div>
+          </div>
+        \`).join('');
+
+        // Attach Enter key listener to all retry inputs
+        reviewState.notFoundTracks.forEach(item => {
+          const inp = document.getElementById(\`input-\${item.id}\`);
+          if (inp) {
+            inp.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                retrySingleTrack(item.id);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    // Window global handlers for onclick
+    window.removeFoundTrack = function(id) {
+      reviewState.foundTracks = reviewState.foundTracks.filter(t => t.id !== id);
+      renderReviewLists();
+    };
+
+    window.removeNotFoundTrack = function(id) {
+      reviewState.notFoundTracks = reviewState.notFoundTracks.filter(t => t.id !== id);
+      renderReviewLists();
+    };
+
+    window.retrySingleTrack = async function(id) {
+      const inp = document.getElementById(\`input-\${id}\`);
+      const statusElem = document.getElementById(\`status-\${id}\`);
+      if (!inp) return;
+      const query = inp.value.trim();
+      if (!query) {
+        removeNotFoundTrack(id);
         return;
       }
 
-      // 2. Create Playlist on user account
-      progressStatusLabel.textContent = 'Создаем плейлист в Spotify...';
+      if (statusElem) statusElem.textContent = '🔍 Ищем...';
       try {
-        const createRes = await spotifyApi('/me/playlists', {
+        const searchRes = await spotifyApi(\`/search?q=\${encodeURIComponent(query)}&type=track&limit=1\`);
+        const track = searchRes?.tracks?.items?.[0];
+
+        if (track) {
+          const artists = track.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+          const img = track.album?.images?.[track.album.images.length - 1]?.url || track.album?.images?.[0]?.url || '';
+
+          // Remove from notFoundTracks
+          reviewState.notFoundTracks = reviewState.notFoundTracks.filter(t => t.id !== id);
+
+          // Add to foundTracks
+          reviewState.foundTracks.push({
+            id: 'f_' + Math.random().toString(36).substring(2, 9),
+            query: query,
+            uri: track.uri,
+            name: track.name,
+            artists: artists,
+            image: img
+          });
+
+          renderReviewLists();
+        } else {
+          if (statusElem) statusElem.textContent = 'По-прежнему не найдено. Попробуйте изменить название.';
+        }
+      } catch (err) {
+        if (statusElem) statusElem.textContent = 'Ошибка поиска: ' + err.message;
+      }
+    };
+
+    btnClearAllFound.addEventListener('click', () => {
+      reviewState.foundTracks = [];
+      renderReviewLists();
+    });
+
+    btnDeleteAllNotfound.addEventListener('click', () => {
+      reviewState.notFoundTracks = [];
+      renderReviewLists();
+    });
+
+    btnBackToForm.addEventListener('click', () => {
+      modalReviewView.style.display = 'none';
+      modalFormView.style.display = 'flex';
+      btnBackToForm.style.display = 'none';
+      btnCommitPlaylist.style.display = 'none';
+      btnFindTracks.style.display = 'inline-flex';
+
+      // Update textarea with remaining queries
+      const remainingQueries = [
+        ...reviewState.foundTracks.map(t => t.query),
+        ...reviewState.notFoundTracks.map(t => t.query)
+      ];
+      if (remainingQueries.length) {
+        tracksTextarea.value = remainingQueries.join('\\n');
+        updateTracksCount();
+      }
+    });
+
+    // Step 2: Commit Playlist to Spotify
+    btnCommitPlaylist.addEventListener('click', async () => {
+      if (!reviewState.foundTracks.length) {
+        alert('Нет найденных треков для добавления в плейлист.');
+        return;
+      }
+
+      btnCommitPlaylist.disabled = true;
+      btnCommitPlaylist.textContent = '⏳ Создаем плейлист в Spotify...';
+
+      try {
+        // Ensure currentUser is loaded with valid id
+        if (!currentUser || !currentUser.id) {
+          currentUser = await spotifyApi('/me');
+        }
+
+        const userId = currentUser.id;
+        const name = reviewState.playlistName || 'Мой плейлист';
+        const desc = reviewState.playlistDesc || 'Создано через Spotify Playlist Composer';
+
+        // Spotify Web API creates playlists at /users/{user_id}/playlists
+        const createRes = await spotifyApi(\`/users/\${encodeURIComponent(userId)}/playlists\`, {
           method: 'POST',
           body: JSON.stringify({
             name: name,
-            description: playlistDescInput.value.trim() || 'Создано через Spotify Playlist Composer',
-            public: isPublicSelection
+            description: desc,
+            public: reviewState.isPublic
           })
         });
 
         const newPlaylistId = createRes.id;
         const newPlaylistUrl = createRes.external_urls?.spotify;
+        const uris = reviewState.foundTracks.map(t => t.uri);
 
-        // 3. Add tracks in batches of 100
-        progressStatusLabel.textContent = 'Добавляем найденные треки в плейлист...';
-        for (let b = 0; b < foundTrackUris.length; b += 100) {
-          const batch = foundTrackUris.slice(b, b + 100);
+        // Add tracks in batches of 100
+        for (let b = 0; b < uris.length; b += 100) {
+          const batch = uris.slice(b, b + 100);
           await spotifyApi(\`/playlists/\${newPlaylistId}/tracks\`, {
             method: 'POST',
             body: JSON.stringify({ uris: batch })
@@ -1652,20 +2067,28 @@ Depeche Mode - Enjoy the Silence"></textarea>
         }
 
         // Show Success
-        modalProgressView.style.display = 'none';
+        modalReviewView.style.display = 'none';
+        modalFooter.style.display = 'none';
         modalSuccessView.style.display = 'block';
+
         successSummaryText.innerHTML = \`
-          Плейлист <strong>«\${escapeHtml(name)}»</strong> готов!<br>
-          Добавлено треков: <strong>\${foundTrackUris.length} из \${total}</strong>.
-          \${notFoundTracks.length ? \`<br><span style="color: var(--warning); font-size: 0.8rem;">(Пропущено \${notFoundTracks.length} не найденных)</span>\` : ''}
+          Плейлист <strong>«\${escapeHtml(name)}»</strong> успешно создан!<br>
+          В него добавлено <strong>\${uris.length}</strong> треков.
+          \${reviewState.notFoundTracks.length ? \`<br><span style="color: var(--warning); font-size: 0.82rem;">(Пропущено \${reviewState.notFoundTracks.length} не найденных)</span>\` : ''}
         \`;
         btnOpenSpotifyLink.href = newPlaylistUrl;
 
-        // Refresh main library list
+        // Refresh dashboard library
         await loadPlaylists();
       } catch (err) {
-        alert('Ошибка при создании плейлиста: ' + err.message);
-        resetComposerModal();
+        console.error('Playlist creation error:', err);
+        let errorMsg = err.message || 'Unknown error';
+        if (errorMsg.includes('Forbidden') || errorMsg.includes('403')) {
+          errorMsg = 'Forbidden (403). Скорее всего, токен авторизации не содержит прав на создание плейлистов. Пожалуйста, выйдите из профиля (кнопка «Выйти» вверху) и авторизуйтесь заново, чтобы обновить права доступа.';
+        }
+        alert('Ошибка при создании плейлиста: ' + errorMsg);
+        btnCommitPlaylist.disabled = false;
+        btnCommitPlaylist.textContent = \`🚀 Создать плейлист (\${reviewState.foundTracks.length} треков)\`;
       }
     });
 
