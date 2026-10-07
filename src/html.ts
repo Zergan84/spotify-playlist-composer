@@ -10,23 +10,23 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-base: #0c0d0e;
-      --bg-surface: #141619;
-      --bg-card: #1a1d22;
-      --bg-card-hover: #22262d;
+      --bg-base: #121212;
+      --bg-surface: #181818;
+      --bg-card: #202020;
+      --bg-card-hover: #282828;
       --border-subtle: rgba(255, 255, 255, 0.08);
       --border-focus: #1db954;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --text-subtle: #6b7280;
+      --text-main: #ffffff;
+      --text-muted: #b3b3b3;
+      --text-subtle: #727272;
       --spotify-green: #1db954;
       --spotify-green-hover: #1ed760;
       --spotify-dark: #121212;
       --danger: #ef4444;
       --warning: #f59e0b;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
       --radius-full: 9999px;
       --shadow-lg: 0 16px 40px -8px rgba(0, 0, 0, 0.6);
       --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -58,7 +58,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       transform: translateX(-50%);
       width: 700px;
       height: 400px;
-      background: radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, rgba(29, 185, 84, 0) 70%);
+      background: radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(29, 185, 84, 0) 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -67,7 +67,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       position: sticky;
       top: 0;
       z-index: 40;
-      background: rgba(12, 13, 14, 0.85);
+      background: rgba(18, 18, 18, 0.9);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-subtle);
     }
@@ -75,7 +75,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .header-content {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 16px 24px;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -84,25 +84,25 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .logo-badge {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
       color: var(--text-main);
     }
 
     .spotify-icon {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       fill: var(--spotify-green);
     }
 
     .logo-title {
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       letter-spacing: -0.02em;
     }
 
     .logo-subtitle {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -112,23 +112,23 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .user-profile-badge {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      padding: 6px 14px 6px 8px;
+      padding: 4px 12px 4px 6px;
       border-radius: var(--radius-full);
     }
 
     .user-avatar {
-      width: 30px;
-      height: 30px;
+      width: 26px;
+      height: 26px;
       border-radius: var(--radius-full);
       object-fit: cover;
       background: var(--bg-card);
     }
 
     .user-name {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 600;
     }
 
@@ -136,11 +136,11 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       font-family: inherit;
       font-weight: 600;
-      font-size: 0.92rem;
-      padding: 10px 20px;
+      font-size: 0.86rem;
+      padding: 8px 18px;
       border-radius: var(--radius-full);
       border: none;
       cursor: pointer;
@@ -156,7 +156,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .btn-spotify:hover {
       background: var(--spotify-green-hover);
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px -4px rgba(29, 185, 84, 0.4);
+      box-shadow: 0 6px 20px -4px rgba(29, 185, 84, 0.4);
     }
 
     .btn-secondary {
@@ -171,8 +171,8 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .btn-sm {
-      padding: 6px 14px;
-      font-size: 0.8rem;
+      padding: 5px 12px;
+      font-size: 0.78rem;
     }
 
     main {
@@ -182,7 +182,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       max-width: 1200px;
       width: 100%;
       margin: 0 auto;
-      padding: 32px 24px 64px;
+      padding: 16px 20px 48px;
     }
 
     /* Landing / Login View */
@@ -267,67 +267,84 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       text-decoration: underline;
     }
 
-    /* Dashboard Header */
-    .dashboard-hero {
+    /* Ultra-minimalist Spotify Toolbar */
+    .spotify-toolbar {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 36px;
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .hero-title-group h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-title-group p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-top: 4px;
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
       gap: 12px;
-    }
-
-    /* Filter & Controls */
-    .section-bar {
-      display: flex;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
     }
 
-    .section-heading {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .toolbar-left {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .count-pill {
-      font-size: 0.75rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      padding: 2px 10px;
-      border-radius: var(--radius-full);
-      color: var(--text-muted);
+    .toolbar-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
     }
 
+    .toolbar-user-greeting {
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+    }
+
+    .toolbar-center {
+      flex: 1;
+      max-width: 380px;
+      min-width: 200px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .count-pill {
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 8px;
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .btn-icon-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon-circle:hover {
+      background: var(--bg-card-hover);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Compact Search Input */
     .search-input-wrap {
       position: relative;
-      min-width: 260px;
+      width: 100%;
     }
 
     .search-input {
@@ -335,9 +352,10 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-full);
-      padding: 8px 16px 8px 36px;
+      padding: 7px 14px 7px 32px;
       color: #fff;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      transition: border-color 0.15s;
     }
 
     .search-input:focus {
@@ -347,135 +365,12 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
 
     .search-icon {
       position: absolute;
-      left: 12px;
+      left: 10px;
       top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       fill: var(--text-subtle);
-    }
-
-    /* Playlists Grid */
-    .playlists-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .playlist-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .playlist-card:hover {
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.16);
-      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
-    }
-
-    .playlist-cover-wrap {
-      position: relative;
-      width: 100%;
-      padding-top: 100%;
-      border-radius: var(--radius-sm);
-      overflow: hidden;
-      background: #111;
-    }
-
-    .playlist-cover {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .playlist-cover-fallback {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #1e2229 0%, #111317 100%);
-      color: var(--text-subtle);
-    }
-
-    .playlist-info {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-
-    .playlist-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .playlist-desc {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.4;
-      min-height: 2.2em;
-    }
-
-    .playlist-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 8px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 0.78rem;
-      color: var(--text-subtle);
-    }
-
-    .badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 8px;
-      border-radius: var(--radius-full);
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .badge-public {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-    }
-
-    .badge-private {
-      background: rgba(148, 163, 184, 0.15);
-      color: #cbd5e1;
-    }
-
-    .playlist-date {
-      font-size: 0.75rem;
-      color: var(--text-subtle);
     }
 
     /* View Switcher Segmented Control */
@@ -484,20 +379,20 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-full);
-      padding: 3px;
+      padding: 2px;
       gap: 2px;
     }
 
     .view-toggle-btn {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 5px 12px;
+      padding: 5px 10px;
       border-radius: var(--radius-full);
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -510,31 +405,173 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .view-toggle-btn.active {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
       color: #fff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    /* View Mode 1: Large Cards (Default) */
+    /* ===================================================
+       PLAYLIST VIEW MODES (AUTHENTIC SPOTIFY STYLE)
+       =================================================== */
+
+    /* View Mode 1: Grid Cards (Max Space Efficiency) */
     .playlists-container.view-mode-large {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
     }
 
-    .large-card-actions {
+    .playlist-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-sm);
+      padding: 12px;
       display: flex;
-      gap: 6px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border-subtle);
+      flex-direction: column;
+      gap: 10px;
+      transition: background 0.2s ease, transform 0.2s ease;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid transparent;
+      user-select: none;
     }
 
-    /* View Mode 2: Compact Icons (iPhone app icon size) */
+    .playlist-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .playlist-cover-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #282828;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .playlist-cover {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .playlist-cover-fallback {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #282828;
+      color: var(--text-subtle);
+    }
+
+    /* Direct On-Cover Mini Badges & Actions */
+    .cover-privacy-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      color: #fff;
+      z-index: 4;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+    }
+
+    .cover-actions-overlay {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      display: flex;
+      gap: 4px;
+      z-index: 5;
+      opacity: 0.85;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .playlist-card:hover .cover-actions-overlay {
+      opacity: 1;
+    }
+
+    .cover-action-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      text-decoration: none;
+    }
+
+    .cover-action-btn:hover {
+      background: var(--spotify-green);
+      color: #000;
+      border-color: var(--spotify-green);
+      transform: scale(1.12);
+    }
+
+    .cover-action-btn.btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    .playlist-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .playlist-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .playlist-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .playlist-dot {
+      color: var(--text-subtle);
+    }
+
+    /* View Mode 2: Compact iPhone App Icons */
     .playlists-container.view-mode-compact {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-      gap: 18px 12px;
+      grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+      gap: 16px 10px;
     }
 
     .compact-item {
@@ -549,18 +586,18 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .compact-item:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
     }
 
     .compact-cover-wrap {
       position: relative;
-      width: 72px;
-      height: 72px;
-      border-radius: 18px;
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
       overflow: hidden;
-      background: #111;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #282828;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .compact-cover-img {
@@ -569,14 +606,71 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       object-fit: cover;
     }
 
+    .compact-privacy-badge {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .compact-actions-overlay {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      gap: 2px;
+      z-index: 5;
+      opacity: 0.85;
+      transition: opacity 0.15s ease;
+    }
+
+    .compact-item:hover .compact-actions-overlay {
+      opacity: 1;
+    }
+
+    .compact-btn-edit {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.6rem;
+      transition: all 0.15s;
+    }
+
+    .compact-btn-edit:hover {
+      background: var(--spotify-green);
+      color: #000;
+    }
+
+    .compact-btn-edit.btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
     .compact-title {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       color: #fff;
       text-align: center;
-      margin-top: 6px;
+      margin-top: 5px;
       line-height: 1.25;
-      max-width: 82px;
+      max-width: 78px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -585,139 +679,115 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .compact-tracks-count {
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       color: var(--text-subtle);
       margin-top: 1px;
-    }
-
-    .compact-actions-overlay {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      display: flex;
-      gap: 2px;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      z-index: 5;
-    }
-
-    .compact-item:hover .compact-actions-overlay {
-      opacity: 1;
-    }
-
-    .compact-btn-edit {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.65rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    .compact-btn-edit:hover {
-      background: var(--spotify-green);
-      color: #000;
     }
 
     /* View Mode 3: List View */
     .playlists-container.view-mode-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
     }
 
     .list-row-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
       background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-sm);
-      padding: 10px 14px;
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.15s ease;
+      border-radius: 4px;
+      padding: 6px 12px;
+      transition: background 0.15s ease;
     }
 
     .list-row-item:hover {
       background: var(--bg-card-hover);
-      border-color: rgba(255, 255, 255, 0.16);
-      transform: translateX(2px);
     }
 
     .list-row-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       flex: 1;
       overflow: hidden;
+      cursor: pointer;
+    }
+
+    .list-cover-wrap {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #282828;
     }
 
     .list-row-cover {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      background: #111;
-      flex-shrink: 0;
+    }
+
+    .list-privacy-badge {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      font-size: 0.58rem;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 50%;
+      padding: 1px;
+      line-height: 1;
     }
 
     .list-row-info {
       display: flex;
       flex-direction: column;
+      gap: 2px;
       overflow: hidden;
       flex: 1;
     }
 
     .list-row-title {
-      font-size: 0.92rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 600;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .list-row-desc {
-      font-size: 0.76rem;
+    .list-row-sub {
+      font-size: 0.72rem;
       color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-top: 2px;
-    }
-
-    .list-row-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.78rem;
-      color: var(--text-subtle);
-      flex-shrink: 0;
     }
 
     .list-row-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       flex-shrink: 0;
     }
 
-    /* Editor Modal Styles */
+    /* ===================================================
+       EDITOR MODAL ULTRA-MINIMALIST SPOTIFY STYLING
+       =================================================== */
     .editor-header-grid {
       display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 20px;
+      grid-template-columns: 130px 1fr;
+      gap: 16px;
+      align-items: start;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 580px) {
       .editor-header-grid {
         grid-template-columns: 1fr;
       }
@@ -727,18 +797,19 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
     }
 
     .editor-cover-wrap {
-      width: 150px;
-      height: 150px;
-      border-radius: var(--radius-sm);
+      width: 130px;
+      height: 130px;
+      border-radius: 8px;
       overflow: hidden;
-      background: #111;
+      background: #282828;
       position: relative;
       border: 1px solid var(--border-subtle);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
     }
 
     .editor-cover-img {
@@ -753,8 +824,67 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #1e2229 0%, #111317 100%);
+      background: #282828;
       color: var(--text-subtle);
+    }
+
+    /* Floating Mini On-Cover Action Icons in Editor */
+    .editor-cover-icon-btn {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      z-index: 6;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .editor-cover-icon-btn:hover {
+      background: var(--spotify-green);
+      color: #000;
+      border-color: var(--spotify-green);
+      transform: scale(1.12);
+    }
+
+    .editor-cover-btn-privacy {
+      top: 6px;
+      left: 6px;
+    }
+
+    .editor-cover-btn-generate {
+      top: 6px;
+      right: 6px;
+    }
+
+    .editor-cover-btn-upload {
+      bottom: 6px;
+      right: 6px;
+    }
+
+    .mini-vis-badge {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .mini-vis-badge.badge-pub {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    .mini-vis-badge.badge-priv {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
     }
 
     .editor-meta-fields {
@@ -763,57 +893,76 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       gap: 10px;
     }
 
-    .editor-section-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 16px;
+    .editor-search-bar-wrap {
+      display: flex;
+      gap: 8px;
     }
 
     .editor-search-results {
-      max-height: 200px;
+      max-height: 180px;
       overflow-y: auto;
-      margin-top: 10px;
+      margin-top: 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
     }
 
     .editor-search-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 8px 10px;
+      gap: 8px;
+      padding: 6px 10px;
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+    }
+
+    .editor-tracks-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .editor-tracks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
     .editor-tracks-list {
-      max-height: 280px;
+      max-height: 240px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       padding-right: 4px;
     }
 
     .editor-track-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
+      gap: 8px;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 4px;
       cursor: grab;
       user-select: none;
-      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      transition: background 0.15s;
+      font-size: 0.82rem;
     }
 
     .editor-track-row:active {
       cursor: grabbing;
+    }
+
+    .editor-track-row:hover {
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .editor-track-row.dragging {
@@ -830,8 +979,8 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .drag-handle {
       cursor: grab;
       color: var(--text-subtle);
-      font-size: 1.1rem;
-      padding: 2px 4px;
+      font-size: 0.95rem;
+      padding: 2px;
     }
 
     .drag-handle:hover {
@@ -839,18 +988,18 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .track-num {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       color: var(--text-subtle);
-      width: 22px;
+      width: 18px;
       text-align: right;
     }
 
     .editor-track-thumb {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      border-radius: 3px;
       object-fit: cover;
-      background: #111;
+      background: #282828;
       flex-shrink: 0;
     }
 
@@ -860,7 +1009,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .editor-track-title {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: #fff;
       white-space: nowrap;
@@ -869,7 +1018,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .editor-track-artist {
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
@@ -877,7 +1026,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     }
 
     .editor-track-duration {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-subtle);
       font-family: var(--font-mono);
     }
@@ -885,7 +1034,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
     .editor-track-moves {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
 
     .btn-move {
@@ -893,9 +1042,9 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 0.65rem;
-      padding: 2px 4px;
-      border-radius: 3px;
+      font-size: 0.6rem;
+      padding: 1px 3px;
+      border-radius: 2px;
       line-height: 1;
     }
 
@@ -1425,45 +1574,40 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
 
     <!-- View 2: Dashboard (Playlists & Actions) -->
     <div id="view-dashboard" style="display: none;">
-      <div class="dashboard-hero">
-        <div class="hero-title-group">
-          <h1>Ваша медиатека</h1>
-          <p id="dashboard-user-greeting">Загрузка плейлистов...</p>
-        </div>
-        <div class="hero-actions">
-          <button id="btn-refresh" class="btn btn-secondary btn-sm" title="Обновить список">
-            🔄 Обновить
-          </button>
-          <button id="btn-open-composer" class="btn btn-spotify">
-            ✨ Создать плейлист
-          </button>
-        </div>
-      </div>
-
-      <div class="section-bar">
-        <div class="section-heading">
-          Плейлисты
-          <span id="playlists-count-badge" class="count-pill">0</span>
+      <!-- Single Compact Spotify Toolbar -->
+      <div class="spotify-toolbar">
+        <div class="toolbar-left">
+          <div class="toolbar-title">
+            Медиатека
+            <span id="playlists-count-badge" class="count-pill">0</span>
+          </div>
+          <span id="dashboard-user-greeting" class="toolbar-user-greeting"></span>
         </div>
 
-        <!-- 3-mode View Switcher -->
-        <div class="view-toggle-group" id="view-toggle-group">
-          <button type="button" class="view-toggle-btn" data-mode="list" id="btn-view-list" title="Список">
-            ☰ Список
-          </button>
-          <button type="button" class="view-toggle-btn" data-mode="compact" id="btn-view-compact" title="Небольшие иконки">
-            ▦ Иконки
-          </button>
-          <button type="button" class="view-toggle-btn active" data-mode="large" id="btn-view-large" title="Большие карточки">
-            ⊞ Большие
-          </button>
+        <div class="toolbar-center">
+          <div class="search-input-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24">
+              <path d="M10 2a8 8 0 015.292 13.999l5.354 5.355a1 1 0 01-1.414 1.414l-5.355-5.354A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>
+            </svg>
+            <input type="text" id="playlist-search-input" class="search-input" placeholder="Поиск в медиатеке...">
+          </div>
         </div>
 
-        <div class="search-input-wrap">
-          <svg class="search-icon" viewBox="0 0 24 24">
-            <path d="M10 2a8 8 0 015.292 13.999l5.354 5.355a1 1 0 01-1.414 1.414l-5.355-5.354A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>
-          </svg>
-          <input type="text" id="playlist-search-input" class="search-input" placeholder="Поиск по названию...">
+        <div class="toolbar-right">
+          <!-- 3-mode View Switcher -->
+          <div class="view-toggle-group" id="view-toggle-group">
+            <button type="button" class="view-toggle-btn" data-mode="list" id="btn-view-list" title="Список">☰</button>
+            <button type="button" class="view-toggle-btn" data-mode="compact" id="btn-view-compact" title="Небольшие иконки">▦</button>
+            <button type="button" class="view-toggle-btn active" data-mode="large" id="btn-view-large" title="Большие карточки">⊞</button>
+          </div>
+
+          <button id="btn-refresh" class="btn-icon-circle" title="Обновить плейлисты">
+            🔄
+          </button>
+
+          <button id="btn-open-composer" class="btn btn-spotify btn-sm" style="font-weight: 700; padding: 6px 14px;">
+            ＋ Создать
+          </button>
         </div>
       </div>
 
@@ -1631,87 +1775,79 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
   <!-- Modal: Playlist Editor -->
   <div id="editor-modal" class="modal-overlay">
-    <div class="modal-card" style="max-width: 820px;">
-      <div class="modal-header">
-        <div class="modal-title">✏️ Редактирование плейлиста</div>
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header" style="padding: 14px 20px;">
+        <div class="modal-title" style="font-size: 1.15rem;">✏️ Редактирование плейлиста</div>
         <button id="btn-close-editor-modal" class="modal-close">&times;</button>
       </div>
 
-      <div class="modal-body" style="gap: 20px;">
-        <!-- Top: Cover & Basic Info -->
+      <div class="modal-body" style="gap: 14px; padding: 16px 20px;">
+        <!-- Top: Cover with On-Cover Action Icons & Metadata -->
         <div class="editor-header-grid">
           <div class="editor-cover-section">
             <div class="editor-cover-wrap" id="editor-cover-preview-wrap">
               <img id="editor-cover-preview" class="editor-cover-img" src="" alt="Cover" style="display: none;">
               <div id="editor-cover-placeholder" class="editor-cover-placeholder">
-                <svg style="width: 44px; height: 44px; fill: currentColor;" viewBox="0 0 24 24">
+                <svg style="width: 40px; height: 40px; fill: currentColor;" viewBox="0 0 24 24">
                   <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                 </svg>
               </div>
+
+              <!-- On-Cover Floating Mini Action Icons -->
+              <button type="button" id="editor-vis-toggle" class="editor-cover-icon-btn editor-cover-btn-privacy" title="Нажмите для переключения (🔒 Закрытый / 🌐 Публичный)">
+                <span id="editor-vis-icon">🔒</span>
+              </button>
+
+              <button type="button" id="btn-generate-cover" class="editor-cover-icon-btn editor-cover-btn-generate" title="🎨 Сгенерировать обложку по названию">
+                🎨
+              </button>
+
+              <button type="button" id="btn-upload-cover" class="editor-cover-icon-btn editor-cover-btn-upload" title="📷 Выбрать фото с устройства">
+                📷
+              </button>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-              <input type="file" id="editor-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
-              <button type="button" id="btn-upload-cover" class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;">
-                📷 Выбрать фото
-              </button>
-              <button type="button" id="btn-generate-cover" class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;" title="Сгенерировать стильную обложку по названию">
-                🎨 Сгенерировать обложку
-              </button>
-            </div>
-            <div id="editor-cover-status" style="font-size: 0.7rem; color: var(--spotify-green); text-align: center; min-height: 14px;"></div>
+            <input type="file" id="editor-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+            <div id="editor-cover-status" style="font-size: 0.68rem; color: var(--spotify-green); text-align: center; min-height: 12px; max-width: 130px; line-height: 1.2;"></div>
             <canvas id="cover-canvas" width="640" height="640" style="display: none;"></canvas>
           </div>
 
           <div class="editor-meta-fields">
             <div class="form-group">
-              <label class="form-label" for="editor-name-input">Название плейлиста</label>
-              <input type="text" id="editor-name-input" class="form-input" placeholder="Название...">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="editor-desc-input">Описание</label>
-              <input type="text" id="editor-desc-input" class="form-input" placeholder="Описание плейлиста...">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Тип доступа</label>
-              <div class="form-row-visibility">
-                <div class="visibility-chip" id="editor-vis-private">
-                  🔒 Закрытый
-                </div>
-                <div class="visibility-chip" id="editor-vis-public">
-                  🌐 Публичный
-                </div>
+              <div class="form-label" style="margin-bottom: 3px;">
+                <span>Название</span>
+                <span id="editor-vis-label-badge" class="mini-vis-badge badge-priv">🔒 Закрытый</span>
               </div>
+              <input type="text" id="editor-name-input" class="form-input" style="padding: 8px 12px; font-size: 0.88rem;" placeholder="Название плейлиста...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editor-desc-input" style="margin-bottom: 3px;">Описание</label>
+              <textarea id="editor-desc-input" class="form-input" rows="2" style="padding: 8px 12px; font-size: 0.82rem; resize: none;" placeholder="Краткое описание..."></textarea>
+            </div>
+
+            <!-- Hidden compatibility elements for existing event queries -->
+            <div style="display: none;">
+              <div id="editor-vis-private"></div>
+              <div id="editor-vis-public"></div>
             </div>
           </div>
         </div>
 
         <!-- Add Track Inline Search -->
-        <div class="editor-section-card">
-          <label class="form-label">
-            <span>Добавить трек в плейлист</span>
-            <span style="font-size: 0.74rem; color: var(--text-subtle);">Быстрый поиск трека</span>
-          </label>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <input type="text" id="editor-track-search-input" class="form-input" style="flex: 1;" placeholder="Поиск песни или исполнителя...">
-            <button type="button" id="btn-editor-search-track" class="btn btn-secondary btn-sm" style="padding: 0 16px;">
-              🔍 Искать
-            </button>
-          </div>
-          <div id="editor-search-results" class="editor-search-results" style="display: none;"></div>
+        <div class="editor-search-bar-wrap">
+          <input type="text" id="editor-track-search-input" class="form-input" style="flex: 1; padding: 7px 12px; font-size: 0.82rem;" placeholder="🔍 Поиск трека для добавления в плейлист...">
+          <button type="button" id="btn-editor-search-track" class="btn btn-secondary btn-sm" style="padding: 6px 14px;">
+            Искать
+          </button>
         </div>
+        <div id="editor-search-results" class="editor-search-results" style="display: none;"></div>
 
         <!-- Tracklist with Drag & Drop Reordering -->
-        <div class="editor-section-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <div style="font-size: 0.88rem; font-weight: 700;">
-              Треки (<span id="editor-tracks-count">0</span>)
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-subtle);">
-              Драг&дроп мышкой или стрелки ▲/▼
-            </div>
+        <div class="editor-tracks-container">
+          <div class="editor-tracks-header">
+            <span>Треки (<span id="editor-tracks-count">0</span>)</span>
+            <span style="font-size: 0.7rem; color: var(--text-subtle);">Драг&дроп мышкой или стрелки ▲/▼</span>
           </div>
 
           <div id="editor-tracks-list" class="editor-tracks-list">
@@ -1720,14 +1856,14 @@ Depeche Mode - Enjoy the Silence"></textarea>
         </div>
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer" style="padding: 12px 20px;">
         <button type="button" id="btn-delete-playlist-trigger" class="btn btn-secondary btn-sm" style="color: #f87171; border-color: rgba(239, 68, 68, 0.3);">
-          🗑️ Удалить плейлист
+          🗑️ Удалить
         </button>
         <div style="display: flex; gap: 8px;">
           <button type="button" id="btn-cancel-editor" class="btn btn-secondary btn-sm">Отмена</button>
           <button type="button" id="btn-save-editor" class="btn btn-spotify btn-sm">
-            💾 Сохранить изменения
+            💾 Сохранить
           </button>
         </div>
       </div>
@@ -2307,14 +2443,14 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }
     }
 
-    // View Mode 1: Large Cards
+    // View Mode 1: Large Cards (Ultra-Minimalist Spotify Style)
     function renderLargePlaylists(playlists) {
       playlistsContainer.innerHTML = playlists.map(pl => {
         const cover = pl.images?.[0]?.url;
         const coverHtml = cover
           ? \`<img class="playlist-cover" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
           : \`<div class="playlist-cover-fallback">
-              <svg style="width: 44px; height: 44px; fill: currentColor;" viewBox="0 0 24 24">
+              <svg style="width: 36px; height: 36px; fill: currentColor;" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
               </svg>
              </div>\`;
@@ -2325,31 +2461,27 @@ Depeche Mode - Enjoy the Silence"></textarea>
         const spotifyUrl = pl.external_urls?.spotify || '#';
 
         return \`
-          <div class="playlist-card" onclick="openEditorModal('\${pl.id}')" style="cursor: pointer;">
+          <div class="playlist-card" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)}">
             <div class="playlist-cover-wrap">
               \${coverHtml}
+              <!-- Mini Privacy Indicator On Cover -->
+              <div class="cover-privacy-badge" title="\${isPublic ? 'Публичный плейлист' : 'Закрытый плейлист'}">
+                \${isPublic ? '🌐' : '🔒'}
+              </div>
+              <!-- Mini Action Icons On Cover -->
+              <div class="cover-actions-overlay" onclick="event.stopPropagation();">
+                <button type="button" class="cover-action-btn" onclick="openEditorModal('\${pl.id}')" title="Редактировать">✏️</button>
+                <button type="button" class="cover-action-btn btn-danger" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">🗑️</button>
+                <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="cover-action-btn" title="В Spotify">↗</a>
+              </div>
             </div>
             <div class="playlist-info">
-              <div class="playlist-title" title="\${escapeHtml(pl.name)}">\${escapeHtml(pl.name)}</div>
-              <div class="playlist-desc">\${escapeHtml(pl.description || 'Без описания')}</div>
-            </div>
-            <div class="playlist-meta">
-              <span class="badge-status \${isPublic ? 'badge-public' : 'badge-private'}">
-                \${isPublic ? '🌐 Публичный' : '🔒 Закрытый'}
-              </span>
-              <span>\${totalTracks} \${trackNoun}</span>
-              <span class="playlist-date date-\${pl.id}">Плейлист</span>
-            </div>
-            <div class="large-card-actions" onclick="event.stopPropagation();">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="openEditorModal('\${pl.id}')" title="Редактировать плейлист">
-                ✏️ Редактировать
-              </button>
-              <button type="button" class="btn btn-secondary btn-sm" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить плейлист">
-                🗑️
-              </button>
-              <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-left: auto;" title="Открыть в Spotify">
-                В Spotify ↗
-              </a>
+              <div class="playlist-title">\${escapeHtml(pl.name)}</div>
+              <div class="playlist-meta-row">
+                <span>\${totalTracks} \${trackNoun}</span>
+                <span class="playlist-dot">•</span>
+                <span class="date-\${pl.id}">Плейлист</span>
+              </div>
             </div>
           </div>
         \`;
@@ -2363,11 +2495,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
         const coverHtml = cover
           ? \`<img class="compact-cover-img" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
           : \`<div class="playlist-cover-fallback" style="width: 100%; height: 100%;">
-              <svg style="width: 28px; height: 28px; fill: currentColor;" viewBox="0 0 24 24">
+              <svg style="width: 24px; height: 24px; fill: currentColor;" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
               </svg>
              </div>\`;
 
+        const isPublic = pl.public !== false;
         const totalTracks = pl.tracks?.total || 0;
         const trackNoun = getTrackNoun(totalTracks);
 
@@ -2375,9 +2508,14 @@ Depeche Mode - Enjoy the Silence"></textarea>
           <div class="compact-item" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)} (\${totalTracks} \${trackNoun})">
             <div class="compact-cover-wrap">
               \${coverHtml}
+              <!-- Mini Privacy Indicator On Cover -->
+              <div class="compact-privacy-badge" title="\${isPublic ? 'Публичный' : 'Закрытый'}">
+                \${isPublic ? '🌐' : '🔒'}
+              </div>
+              <!-- Mini Action Icons On Cover -->
               <div class="compact-actions-overlay" onclick="event.stopPropagation();">
                 <button type="button" class="compact-btn-edit" title="Редактировать" onclick="openEditorModal('\${pl.id}')">✏️</button>
-                <button type="button" class="compact-btn-edit" title="Удалить" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')">✕</button>
+                <button type="button" class="compact-btn-edit btn-danger" title="Удалить" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')">✕</button>
               </div>
             </div>
             <div class="compact-title">\${escapeHtml(pl.name)}</div>
@@ -2393,8 +2531,8 @@ Depeche Mode - Enjoy the Silence"></textarea>
         const cover = pl.images?.[0]?.url;
         const coverHtml = cover
           ? \`<img class="list-row-cover" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
-          : \`<div class="playlist-cover-fallback" style="width: 44px; height: 44px; border-radius: 8px;">
-              <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
+          : \`<div class="playlist-cover-fallback" style="width: 36px; height: 36px; border-radius: 4px;">
+              <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
               </svg>
              </div>\`;
@@ -2406,30 +2544,24 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
         return \`
           <div class="list-row-item">
-            <div class="list-row-left" onclick="openEditorModal('\${pl.id}')" style="cursor: pointer;">
-              \${coverHtml}
+            <div class="list-row-left" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)}">
+              <div class="list-cover-wrap">
+                \${coverHtml}
+                <span class="list-privacy-badge" title="\${isPublic ? 'Публичный' : 'Закрытый'}">\${isPublic ? '🌐' : '🔒'}</span>
+              </div>
               <div class="list-row-info">
                 <div class="list-row-title">\${escapeHtml(pl.name)}</div>
-                <div class="list-row-desc">\${escapeHtml(pl.description || 'Без описания')}</div>
+                <div class="list-row-sub">
+                  <span>\${totalTracks} \${trackNoun}</span>
+                  <span class="playlist-dot">•</span>
+                  <span class="date-\${pl.id}">Плейлист</span>
+                </div>
               </div>
             </div>
-            <div class="list-row-meta">
-              <span class="badge-status \${isPublic ? 'badge-public' : 'badge-private'}">
-                \${isPublic ? '🌐' : '🔒'}
-              </span>
-              <span>\${totalTracks} \${trackNoun}</span>
-              <span class="playlist-date date-\${pl.id}">Плейлист</span>
-            </div>
-            <div class="list-row-actions">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="openEditorModal('\${pl.id}')" title="Редактировать">
-                ✏️ Редактировать
-              </button>
-              <button type="button" class="btn btn-secondary btn-sm" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">
-                🗑️
-              </button>
-              <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" title="Открыть в Spotify">
-                ↗
-              </a>
+            <div class="list-row-actions" onclick="event.stopPropagation();">
+              <button type="button" class="cover-action-btn" onclick="openEditorModal('\${pl.id}')" title="Редактировать">✏️</button>
+              <button type="button" class="cover-action-btn btn-danger" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">🗑️</button>
+              <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="cover-action-btn" title="В Spotify">↗</a>
             </div>
           </div>
         \`;
@@ -2509,15 +2641,18 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }
 
       // If user does not own this playlist, adjust controls and show notice
+      const visToggle = document.getElementById('editor-vis-toggle');
       if (!isOwner) {
         btnSaveEditor.style.display = 'none';
-        btnUploadCover.style.display = 'none';
-        btnGenerateCover.style.display = 'none';
-        editorCoverStatus.innerHTML = '<span style="color: var(--warning);">⚠️ Это плейлист другого автора (' + escapeHtml(cached.owner?.display_name || 'Spotify') + '). Spotify запрещает менять чужие плейлисты.</span>';
+        if (btnUploadCover) btnUploadCover.style.display = 'none';
+        if (btnGenerateCover) btnGenerateCover.style.display = 'none';
+        if (visToggle) visToggle.style.display = 'none';
+        editorCoverStatus.innerHTML = '<span style="color: var(--warning);">⚠️ Плейлист другого автора (' + escapeHtml(cached.owner?.display_name || 'Spotify') + ')</span>';
       } else {
         btnSaveEditor.style.display = 'inline-flex';
-        btnUploadCover.style.display = 'inline-block';
-        btnGenerateCover.style.display = 'inline-block';
+        if (btnUploadCover) btnUploadCover.style.display = 'flex';
+        if (btnGenerateCover) btnGenerateCover.style.display = 'flex';
+        if (visToggle) visToggle.style.display = 'flex';
       }
 
       // 2. Fetch fresh metadata gracefully (if permitted by Spotify)
@@ -2592,17 +2727,26 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
     function updateEditorVisChips(isPublic) {
       editingState.isPublic = isPublic;
-      if (isPublic) {
-        editorVisPublic.classList.add('selected');
-        editorVisPrivate.classList.remove('selected');
-      } else {
-        editorVisPrivate.classList.add('selected');
-        editorVisPublic.classList.remove('selected');
+      const visIcon = document.getElementById('editor-vis-icon');
+      const visBadge = document.getElementById('editor-vis-label-badge');
+      if (visIcon) visIcon.textContent = isPublic ? '🌐' : '🔒';
+      if (visBadge) {
+        visBadge.textContent = isPublic ? '🌐 Публичный' : '🔒 Закрытый';
+        visBadge.className = 'mini-vis-badge ' + (isPublic ? 'badge-pub' : 'badge-priv');
       }
+      if (editorVisPublic) editorVisPublic.classList.toggle('selected', isPublic);
+      if (editorVisPrivate) editorVisPrivate.classList.toggle('selected', !isPublic);
     }
 
-    editorVisPrivate.addEventListener('click', () => updateEditorVisChips(false));
-    editorVisPublic.addEventListener('click', () => updateEditorVisChips(true));
+    const editorVisToggle = document.getElementById('editor-vis-toggle');
+    if (editorVisToggle) {
+      editorVisToggle.addEventListener('click', () => {
+        updateEditorVisChips(!editingState.isPublic);
+      });
+    }
+
+    if (editorVisPrivate) editorVisPrivate.addEventListener('click', () => updateEditorVisChips(false));
+    if (editorVisPublic) editorVisPublic.addEventListener('click', () => updateEditorVisChips(true));
 
     function closeEditorModal() {
       editorModal.classList.remove('open');
