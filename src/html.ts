@@ -809,10 +809,35 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
             <span id="config-source-label" style="color: var(--spotify-green);"></span>
           </div>
           <input type="text" id="input-client-id" class="config-input" placeholder="Вставьте Client ID из Spotify Dashboard...">
+
+          <div class="config-label" style="margin-top: 14px;">
+            <span>Redirect URI для Spotify Dashboard:</span>
+            <span id="copy-status-label" style="color: var(--spotify-green); font-size: 0.75rem;"></span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="input-redirect-uri" class="config-input" style="flex: 1;" readonly>
+            <button id="btn-copy-redirect" class="btn btn-secondary btn-sm" type="button" style="white-space: nowrap;">
+              📋 Скопировать
+            </button>
+          </div>
+
+          <div style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-uri-slash" style="font-size: 0.72rem; padding: 4px 10px;">
+              с косой чертой ( / )
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-uri-noslash" style="font-size: 0.72rem; padding: 4px 10px;">
+              без слеша
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-uri-callback" style="font-size: 0.72rem; padding: 4px 10px;">
+              /callback
+            </button>
+          </div>
+
           <div class="config-help">
-            Для работы требуется <strong>Client ID</strong> бесплатного приложения из <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify Developer Dashboard</a>.<br>
-            Redirect URI в настройках приложения укажите:<br>
-            <code id="redirect-uri-display" style="color: #cbd5e1; user-select: all;"></code>
+            💡 <strong>Как исправить ошибку «redirect_uri: Not matching configuration»:</strong><br>
+            1. В <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify Developer Dashboard</a> откройте ваше приложение и нажмите <strong>Settings</strong>.<br>
+            2. В секции <strong>Redirect URIs</strong> скопируйте и добавьте адрес выше (рекомендуется добавить сразу все три варианта).<br>
+            3. Обязательно нажмите кнопку <strong>Add</strong>, а затем внизу страницы нажмите зеленую кнопку <strong>Save</strong>!
           </div>
         </div>
       </div>
@@ -989,7 +1014,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const viewDashboard = document.getElementById('view-dashboard');
     const headerUserZone = document.getElementById('header-user-zone');
     const inputClientId = document.getElementById('input-client-id');
-    const redirectUriDisplay = document.getElementById('redirect-uri-display');
+    const inputRedirectUri = document.getElementById('input-redirect-uri');
+    const btnCopyRedirect = document.getElementById('btn-copy-redirect');
+    const copyStatusLabel = document.getElementById('copy-status-label');
+    const btnUriSlash = document.getElementById('btn-uri-slash');
+    const btnUriNoslash = document.getElementById('btn-uri-noslash');
+    const btnUriCallback = document.getElementById('btn-uri-callback');
     const configSourceLabel = document.getElementById('config-source-label');
     const btnLogin = document.getElementById('btn-login');
     const btnRefresh = document.getElementById('btn-refresh');
@@ -1024,7 +1054,14 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const btnOpenSpotifyLink = document.getElementById('btn-open-spotify-link');
     const btnCreateAnother = document.getElementById('btn-create-another');
 
-    redirectUriDisplay.textContent = REDIRECT_URI;
+    function getActiveRedirectUri() {
+      return localStorage.getItem('sp_redirect_uri') || (window.location.origin + '/');
+    }
+
+    function setActiveRedirectUri(uri) {
+      localStorage.setItem('sp_redirect_uri', uri);
+      if (inputRedirectUri) inputRedirectUri.value = uri;
+    }
 
     function getStoredClientId() {
       return localStorage.getItem('sp_client_id') || SERVER_DEFAULT_CLIENT_ID;
@@ -1044,6 +1081,36 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       inputClientId.addEventListener('input', (e) => {
         setStoredClientId(e.target.value);
+      });
+
+      // Redirect URI controls
+      const activeUri = getActiveRedirectUri();
+      setActiveRedirectUri(activeUri);
+
+      btnUriSlash.addEventListener('click', () => {
+        setActiveRedirectUri(window.location.origin + '/');
+        flashCopyStatus('Выбран вариант со слешем ( / )');
+      });
+
+      btnUriNoslash.addEventListener('click', () => {
+        setActiveRedirectUri(window.location.origin);
+        flashCopyStatus('Выбран вариант без слеша');
+      });
+
+      btnUriCallback.addEventListener('click', () => {
+        setActiveRedirectUri(window.location.origin + '/callback');
+        flashCopyStatus('Выбран вариант /callback');
+      });
+
+      btnCopyRedirect.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(inputRedirectUri.value);
+          flashCopyStatus('✅ Скопировано в буфер!');
+        } catch {
+          inputRedirectUri.select();
+          document.execCommand('copy');
+          flashCopyStatus('✅ Скопировано!');
+        }
       });
 
       // Handle OAuth Redirect Callback (?code=... or error)
@@ -1075,6 +1142,16 @@ Depeche Mode - Enjoy the Silence"></textarea>
         showLanding();
       }
     });
+
+    function flashCopyStatus(text) {
+      if (!copyStatusLabel) return;
+      copyStatusLabel.textContent = text;
+      setTimeout(() => {
+        if (copyStatusLabel.textContent === text) {
+          copyStatusLabel.textContent = '';
+        }
+      }, 3000);
+    }
 
     // PKCE Helper Functions
     function generateRandomString(length) {
@@ -1111,6 +1188,9 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }
       setStoredClientId(clientId);
 
+      const redirectUri = getActiveRedirectUri();
+      localStorage.setItem('sp_active_redirect_uri', redirectUri);
+
       const codeVerifier = generateRandomString(64);
       const codeChallenge = await generateCodeChallenge(codeVerifier);
       localStorage.setItem('sp_code_verifier', codeVerifier);
@@ -1118,7 +1198,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       const params = new URLSearchParams({
         client_id: clientId,
         response_type: 'code',
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: redirectUri,
         scope: SPOTIFY_SCOPES,
         code_challenge_method: 'S256',
         code_challenge: codeChallenge
@@ -1130,6 +1210,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
     async function handleAuthCallback(code) {
       const clientId = getStoredClientId();
       const codeVerifier = localStorage.getItem('sp_code_verifier');
+      const redirectUri = localStorage.getItem('sp_active_redirect_uri') || getActiveRedirectUri();
 
       if (!codeVerifier) {
         alert('Ошибка проверки сессии авторизации (отсутствует code_verifier). Попробуйте снова.');
@@ -1143,16 +1224,25 @@ Depeche Mode - Enjoy the Silence"></textarea>
           client_id: clientId,
           grant_type: 'authorization_code',
           code: code,
-          redirect_uri: REDIRECT_URI,
+          redirect_uri: redirectUri,
           code_verifier: codeVerifier
         });
 
-        // Request token directly or through proxy
-        const res = await fetch('https://accounts.spotify.com/api/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: body.toString()
-        });
+        // Request token directly or through proxy fallback
+        let res;
+        try {
+          res = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body.toString()
+          });
+        } catch {
+          res = await fetch('/api/auth/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: body.toString()
+          });
+        }
 
         const data = await res.json();
         if (data.error) {
@@ -1161,6 +1251,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
         saveToken(data);
         localStorage.removeItem('sp_code_verifier');
+        localStorage.removeItem('sp_active_redirect_uri');
         window.history.replaceState({}, document.title, window.location.pathname);
         currentToken = data.access_token;
         await initializeDashboard();
