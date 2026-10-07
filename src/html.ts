@@ -2733,7 +2733,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
           ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 640, 640);
 
           const dataUrl = coverCanvas.toDataURL('image/jpeg', 0.82);
-          const base64 = dataUrl.replace(/^data:image\/jpeg;base64,/, '');
+          const base64 = dataUrl.split(',')[1] || dataUrl;
           editingState.newCoverBase64 = base64;
 
           editorCoverPreview.src = dataUrl;
@@ -2861,7 +2861,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       // Export to base64 JPEG
       const dataUrl = coverCanvas.toDataURL('image/jpeg', 0.85);
-      const base64 = dataUrl.replace(/^data:image\/jpeg;base64,/, '');
+      const base64 = dataUrl.split(',')[1] || dataUrl;
       editingState.newCoverBase64 = base64;
 
       editorCoverPreview.src = dataUrl;
@@ -3039,15 +3039,6 @@ Depeche Mode - Enjoy the Silence"></textarea>
       tracksTextarea.value = '';
       updateTracksCount();
     });
-
-    // Review and composer state
-    let reviewState = {
-      playlistName: '',
-      playlistDesc: '',
-      isPublic: false,
-      foundTracks: [],
-      notFoundTracks: []
-    };
 
     function resetComposerModal() {
       modalFormView.style.display = 'flex';
@@ -3402,10 +3393,11 @@ Depeche Mode - Enjoy the Silence"></textarea>
     function escapeJsString(str) {
       if (!str) return '';
       return String(str)
-        .replace(/\\/g, '\\\\')
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '&quot;')
-        .replace(/\\n/g, ' ');
+        .replaceAll('&', '&amp;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+        .replaceAll('\\n', ' ')
+        .replaceAll('\\r', '');
     }
   </script>
 </body>
