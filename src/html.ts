@@ -2266,7 +2266,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
     async function enrichPlaylistDates() {
       for (const pl of cachedPlaylists) {
         try {
-          const tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=items(added_at)\`);
+          let tracksData = null;
+          try {
+            tracksData = await spotifyApi(\`/playlists/\${pl.id}/items?limit=1&fields=items(added_at)\`);
+          } catch (_) {
+            tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=items(added_at)\`);
+          }
           if (tracksData?.items?.[0]?.added_at) {
             const dateStr = formatDate(tracksData.items[0].added_at);
             const dateElems = document.querySelectorAll(\`.date-\${pl.id}\`);
@@ -2467,10 +2472,6 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
     window.openEditorModal = async function(playlistId) {
       editorModal.classList.add('open');
-      editorNameInput.value = 'Загрузка...';
-      editorDescInput.value = '';
-      editorTracksCount.textContent = '0';
-      editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка треков плейлиста...</div>';
       editorCoverPreview.style.display = 'none';
       editorCoverPlaceholder.style.display = 'flex';
       editorCoverStatus.textContent = '';
@@ -2478,42 +2479,99 @@ Depeche Mode - Enjoy the Silence"></textarea>
       editorSearchResults.innerHTML = '';
       editorTrackSearchInput.value = '';
 
+      // 1. Immediately read from cached playlists so modal opens instantly with all info!
+      const cached = cachedPlaylists.find(p => p.id === playlistId) || {};
+      const isOwner = !currentUser || !cached.owner || (currentUser.id && cached.owner.id === currentUser.id);
+
       editingState = {
         id: playlistId,
-        name: '',
-        description: '',
-        isPublic: false,
-        coverUrl: null,
+        name: cached.name || '',
+        description: cached.description || '',
+        isPublic: cached.public !== false,
+        coverUrl: cached.images?.[0]?.url || null,
         newCoverBase64: null,
         tracks: [],
-        paletteIndex: 0
+        paletteIndex: 0,
+        isOwner: isOwner
       };
 
+      editorNameInput.value = editingState.name;
+      editorDescInput.value = editingState.description;
+      editorTracksCount.textContent = cached.tracks?.total || '0';
+      editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 24px;">Загрузка треков...</div>';
+
+      updateEditorVisChips(editingState.isPublic);
+
+      if (editingState.coverUrl) {
+        editorCoverPreview.src = editingState.coverUrl;
+        editorCoverPreview.style.display = 'block';
+        editorCoverPlaceholder.style.display = 'none';
+      }
+
+      // If user does not own this playlist, adjust controls and show notice
+      if (!isOwner) {
+        btnSaveEditor.style.display = 'none';
+        btnUploadCover.style.display = 'none';
+        btnGenerateCover.style.display = 'none';
+        editorCoverStatus.innerHTML = '<span style="color: var(--warning);">⚠️ Это плейлист другого автора (' + escapeHtml(cached.owner?.display_name || 'Spotify') + '). Spotify запрещает менять чужие плейлисты.</span>';
+      } else {
+        btnSaveEditor.style.display = 'inline-flex';
+        btnUploadCover.style.display = 'inline-block';
+        btnGenerateCover.style.display = 'inline-block';
+      }
+
+      // 2. Fetch fresh metadata gracefully (if permitted by Spotify)
+      let plData = null;
       try {
-        const plData = await spotifyApi('/playlists/' + playlistId);
-        editingState.id = plData.id;
-        editingState.name = plData.name || '';
-        editingState.description = plData.description || '';
-        editingState.isPublic = plData.public !== false;
-        editingState.coverUrl = plData.images?.[0]?.url || null;
-
-        editorNameInput.value = editingState.name;
-        editorDescInput.value = editingState.description;
-
-        updateEditorVisChips(editingState.isPublic);
-
-        if (editingState.coverUrl) {
-          editorCoverPreview.src = editingState.coverUrl;
-          editorCoverPreview.style.display = 'block';
-          editorCoverPlaceholder.style.display = 'none';
+        plData = await spotifyApi('/playlists/' + playlistId);
+        if (plData) {
+          editingState.name = plData.name || editingState.name;
+          editingState.description = plData.description || editingState.description;
+          editingState.isPublic = plData.public !== false;
+          if (plData.images?.[0]?.url) {
+            editingState.coverUrl = plData.images[0].url;
+            editorCoverPreview.src = editingState.coverUrl;
+            editorCoverPreview.style.display = 'block';
+            editorCoverPlaceholder.style.display = 'none';
+          }
+          editorNameInput.value = editingState.name;
+          editorDescInput.value = editingState.description;
+          updateEditorVisChips(editingState.isPublic);
         }
+      } catch (eMeta) {
+        console.warn('Playlist metadata fetch:', eMeta);
+      }
 
-        const tracksData = await spotifyApi('/playlists/' + playlistId + '/tracks?limit=100');
-        const rawItems = tracksData?.items || [];
+      // 3. Fetch tracks using /items (New 2026 API) or /tracks (legacy fallback) or plData.tracks
+      let rawItems = null;
+      if (plData?.tracks?.items && Array.isArray(plData.tracks.items) && plData.tracks.items.length > 0) {
+        rawItems = plData.tracks.items;
+      } else if (plData?.items?.items && Array.isArray(plData.items.items)) {
+        rawItems = plData.items.items;
+      }
+
+      if (!rawItems) {
+        try {
+          // Official 2026 endpoint
+          const res = await spotifyApi('/playlists/' + playlistId + '/items?limit=100');
+          rawItems = res?.items || [];
+        } catch (eItems) {
+          console.warn('/playlists/.../items failed:', eItems);
+          try {
+            // Legacy endpoint fallback
+            const res = await spotifyApi('/playlists/' + playlistId + '/tracks?limit=100');
+            rawItems = res?.items || [];
+          } catch (eTracks) {
+            console.warn('/playlists/.../tracks failed:', eTracks);
+          }
+        }
+      }
+
+      if (rawItems && Array.isArray(rawItems)) {
         editingState.tracks = rawItems
-          .filter(item => item && item.track)
+          .filter(item => item && (item.track || item.item))
           .map(item => {
-            const tr = item.track;
+            const tr = item.track || item.item;
             const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
             const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
             return {
@@ -2527,10 +2585,8 @@ Depeche Mode - Enjoy the Silence"></textarea>
           });
 
         renderEditorTracks();
-      } catch (err) {
-        console.error('Failed to load playlist for editing:', err);
-        alert('Не удалось загрузить данные плейлиста: ' + err.message);
-        editorModal.classList.remove('open');
+      } else {
+        editorTracksList.innerHTML = '<div style="color: var(--warning); text-align: center; padding: 24px; font-size: 0.85rem; line-height: 1.5;">⚠️ Spotify не предоставил доступ к списку треков для этого плейлиста (Forbidden).<br><span style="font-size: 0.76rem; color: var(--text-muted);">Spotify блокирует прямое чтение треков для чужих или алгоритмических плейлистов. Вы можете удалить этот плейлист из своей медиатеки кнопкой ниже.</span></div>';
       }
     };
 
@@ -2899,10 +2955,17 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
         // 2. Update track order atomically
         const uris = editingState.tracks.map(t => t.uri);
-        await spotifyApi('/playlists/' + id + '/tracks', {
-          method: 'PUT',
-          body: JSON.stringify({ uris: uris.slice(0, 100) })
-        });
+        try {
+          await spotifyApi('/playlists/' + id + '/items', {
+            method: 'PUT',
+            body: JSON.stringify({ uris: uris.slice(0, 100) })
+          });
+        } catch (eItems) {
+          await spotifyApi('/playlists/' + id + '/tracks', {
+            method: 'PUT',
+            body: JSON.stringify({ uris: uris.slice(0, 100) })
+          });
+        }
 
         // 3. Update cover image if newly generated or uploaded
         if (editingState.newCoverBase64) {
@@ -3321,15 +3384,27 @@ Depeche Mode - Enjoy the Silence"></textarea>
         const name = reviewState.playlistName || 'Мой плейлист';
         const desc = reviewState.playlistDesc || 'Создано через Spotify Playlist Composer';
 
-        // Spotify Web API creates playlists at /users/{user_id}/playlists
-        const createRes = await spotifyApi(\`/users/\${encodeURIComponent(userId)}/playlists\`, {
-          method: 'POST',
-          body: JSON.stringify({
-            name: name,
-            description: desc,
-            public: reviewState.isPublic
-          })
-        });
+        // Spotify Web API creates playlists at /me/playlists or /users/{user_id}/playlists
+        let createRes = null;
+        try {
+          createRes = await spotifyApi('/me/playlists', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: name,
+              description: desc,
+              public: reviewState.isPublic
+            })
+          });
+        } catch (eMe) {
+          createRes = await spotifyApi(\`/users/\${encodeURIComponent(userId)}/playlists\`, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: name,
+              description: desc,
+              public: reviewState.isPublic
+            })
+          });
+        }
 
         const newPlaylistId = createRes.id;
         const newPlaylistUrl = createRes.external_urls?.spotify;
@@ -3338,10 +3413,17 @@ Depeche Mode - Enjoy the Silence"></textarea>
         // Add tracks in batches of 100
         for (let b = 0; b < uris.length; b += 100) {
           const batch = uris.slice(b, b + 100);
-          await spotifyApi(\`/playlists/\${newPlaylistId}/tracks\`, {
-            method: 'POST',
-            body: JSON.stringify({ uris: batch })
-          });
+          try {
+            await spotifyApi(\`/playlists/\${newPlaylistId}/items\`, {
+              method: 'POST',
+              body: JSON.stringify({ uris: batch })
+            });
+          } catch (eItems) {
+            await spotifyApi(\`/playlists/\${newPlaylistId}/tracks\`, {
+              method: 'POST',
+              body: JSON.stringify({ uris: batch })
+            });
+          }
         }
 
         // Show Success
