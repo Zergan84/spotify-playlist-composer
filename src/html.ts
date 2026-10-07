@@ -478,6 +478,432 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       color: var(--text-subtle);
     }
 
+    /* View Switcher Segmented Control */
+    .view-toggle-group {
+      display: inline-flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .view-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.76rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .view-toggle-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .view-toggle-btn.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* View Mode 1: Large Cards (Default) */
+    .playlists-container.view-mode-large {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .large-card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* View Mode 2: Compact Icons (iPhone app icon size) */
+    .playlists-container.view-mode-compact {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+      gap: 18px 12px;
+    }
+
+    .compact-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .compact-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .compact-cover-wrap {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .compact-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .compact-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      margin-top: 6px;
+      line-height: 1.25;
+      max-width: 82px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .compact-tracks-count {
+      font-size: 0.66rem;
+      color: var(--text-subtle);
+      margin-top: 1px;
+    }
+
+    .compact-actions-overlay {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      display: flex;
+      gap: 2px;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 5;
+    }
+
+    .compact-item:hover .compact-actions-overlay {
+      opacity: 1;
+    }
+
+    .compact-btn-edit {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.65rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .compact-btn-edit:hover {
+      background: var(--spotify-green);
+      color: #000;
+    }
+
+    /* View Mode 3: List View */
+    .playlists-container.view-mode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .list-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.15s ease;
+    }
+
+    .list-row-item:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateX(2px);
+    }
+
+    .list-row-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .list-row-cover {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #111;
+      flex-shrink: 0;
+    }
+
+    .list-row-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .list-row-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-row-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .list-row-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+      flex-shrink: 0;
+    }
+
+    .list-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Editor Modal Styles */
+    .editor-header-grid {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .editor-header-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .editor-cover-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .editor-cover-wrap {
+      width: 150px;
+      height: 150px;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #111;
+      position: relative;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .editor-cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .editor-cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e2229 0%, #111317 100%);
+      color: var(--text-subtle);
+    }
+
+    .editor-meta-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .editor-section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .editor-search-results {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .editor-search-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    .editor-tracks-list {
+      max-height: 280px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+    }
+
+    .editor-track-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      cursor: grab;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+
+    .editor-track-row:active {
+      cursor: grabbing;
+    }
+
+    .editor-track-row.dragging {
+      opacity: 0.35;
+      border: 1px dashed var(--spotify-green);
+    }
+
+    .editor-track-row.drag-over {
+      border-color: var(--spotify-green);
+      background: rgba(29, 185, 84, 0.12);
+      transform: scale(1.01);
+    }
+
+    .drag-handle {
+      cursor: grab;
+      color: var(--text-subtle);
+      font-size: 1.1rem;
+      padding: 2px 4px;
+    }
+
+    .drag-handle:hover {
+      color: #fff;
+    }
+
+    .track-num {
+      font-size: 0.78rem;
+      color: var(--text-subtle);
+      width: 22px;
+      text-align: right;
+    }
+
+    .editor-track-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: #111;
+      flex-shrink: 0;
+    }
+
+    .editor-track-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .editor-track-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .editor-track-artist {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .editor-track-duration {
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+      font-family: var(--font-mono);
+    }
+
+    .editor-track-moves {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .btn-move {
+      background: rgba(255, 255, 255, 0.05);
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.65rem;
+      padding: 2px 4px;
+      border-radius: 3px;
+      line-height: 1;
+    }
+
+    .btn-move:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
     /* Modal / Drawer for Playlist Composer */
     .modal-overlay {
       position: fixed;
@@ -1019,6 +1445,20 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
           Плейлисты
           <span id="playlists-count-badge" class="count-pill">0</span>
         </div>
+
+        <!-- 3-mode View Switcher -->
+        <div class="view-toggle-group" id="view-toggle-group">
+          <button type="button" class="view-toggle-btn" data-mode="list" id="btn-view-list" title="Список">
+            ☰ Список
+          </button>
+          <button type="button" class="view-toggle-btn" data-mode="compact" id="btn-view-compact" title="Небольшие иконки">
+            ▦ Иконки
+          </button>
+          <button type="button" class="view-toggle-btn active" data-mode="large" id="btn-view-large" title="Большие карточки">
+            ⊞ Большие
+          </button>
+        </div>
+
         <div class="search-input-wrap">
           <svg class="search-icon" viewBox="0 0 24 24">
             <path d="M10 2a8 8 0 015.292 13.999l5.354 5.355a1 1 0 01-1.414 1.414l-5.355-5.354A8 8 0 1110 2zm0 2a6 6 0 100 12 6 6 0 000-12z"/>
@@ -1028,7 +1468,7 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       </div>
 
       <!-- Playlists Container -->
-      <div id="playlists-grid" class="playlists-grid">
+      <div id="playlists-container" class="playlists-container view-mode-large">
         <div class="empty-state">
           Загрузка ваших плейлистов из Spotify...
         </div>
@@ -1189,6 +1629,135 @@ Depeche Mode - Enjoy the Silence"></textarea>
     </div>
   </div>
 
+  <!-- Modal: Playlist Editor -->
+  <div id="editor-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 820px;">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Редактирование плейлиста</div>
+        <button id="btn-close-editor-modal" class="modal-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="gap: 20px;">
+        <!-- Top: Cover & Basic Info -->
+        <div class="editor-header-grid">
+          <div class="editor-cover-section">
+            <div class="editor-cover-wrap" id="editor-cover-preview-wrap">
+              <img id="editor-cover-preview" class="editor-cover-img" src="" alt="Cover" style="display: none;">
+              <div id="editor-cover-placeholder" class="editor-cover-placeholder">
+                <svg style="width: 44px; height: 44px; fill: currentColor;" viewBox="0 0 24 24">
+                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+              <input type="file" id="editor-file-input" accept="image/jpeg,image/png,image/webp" style="display: none;">
+              <button type="button" id="btn-upload-cover" class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;">
+                📷 Выбрать фото
+              </button>
+              <button type="button" id="btn-generate-cover" class="btn btn-secondary btn-sm" style="width: 100%; font-size: 0.76rem;" title="Сгенерировать стильную обложку по названию">
+                🎨 Сгенерировать обложку
+              </button>
+            </div>
+            <div id="editor-cover-status" style="font-size: 0.7rem; color: var(--spotify-green); text-align: center; min-height: 14px;"></div>
+            <canvas id="cover-canvas" width="640" height="640" style="display: none;"></canvas>
+          </div>
+
+          <div class="editor-meta-fields">
+            <div class="form-group">
+              <label class="form-label" for="editor-name-input">Название плейлиста</label>
+              <input type="text" id="editor-name-input" class="form-input" placeholder="Название...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editor-desc-input">Описание</label>
+              <input type="text" id="editor-desc-input" class="form-input" placeholder="Описание плейлиста...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Тип доступа</label>
+              <div class="form-row-visibility">
+                <div class="visibility-chip" id="editor-vis-private">
+                  🔒 Закрытый
+                </div>
+                <div class="visibility-chip" id="editor-vis-public">
+                  🌐 Публичный
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Track Inline Search -->
+        <div class="editor-section-card">
+          <label class="form-label">
+            <span>Добавить трек в плейлист</span>
+            <span style="font-size: 0.74rem; color: var(--text-subtle);">Быстрый поиск трека</span>
+          </label>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <input type="text" id="editor-track-search-input" class="form-input" style="flex: 1;" placeholder="Поиск песни или исполнителя...">
+            <button type="button" id="btn-editor-search-track" class="btn btn-secondary btn-sm" style="padding: 0 16px;">
+              🔍 Искать
+            </button>
+          </div>
+          <div id="editor-search-results" class="editor-search-results" style="display: none;"></div>
+        </div>
+
+        <!-- Tracklist with Drag & Drop Reordering -->
+        <div class="editor-section-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="font-size: 0.88rem; font-weight: 700;">
+              Треки (<span id="editor-tracks-count">0</span>)
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-subtle);">
+              Драг&дроп мышкой или стрелки ▲/▼
+            </div>
+          </div>
+
+          <div id="editor-tracks-list" class="editor-tracks-list">
+            <!-- Dynamically populated rows -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-delete-playlist-trigger" class="btn btn-secondary btn-sm" style="color: #f87171; border-color: rgba(239, 68, 68, 0.3);">
+          🗑️ Удалить плейлист
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="btn-cancel-editor" class="btn btn-secondary btn-sm">Отмена</button>
+          <button type="button" id="btn-save-editor" class="btn btn-spotify btn-sm">
+            💾 Сохранить изменения
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Delete Confirmation -->
+  <div id="delete-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #f87171;">Удаление плейлиста</div>
+        <button id="btn-close-delete-modal" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 24px;">
+        <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.5;">
+          Вы действительно хотите удалить плейлист <strong id="delete-playlist-name" style="color: #fff;"></strong> из медиатеки?
+        </p>
+        <p style="font-size: 0.78rem; color: var(--text-subtle); margin-top: 8px;">
+          Он будет отписан и удален из вашего профиля Spotify.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-delete" class="btn btn-secondary btn-sm">Отмена</button>
+        <button id="btn-confirm-delete" class="btn btn-spotify btn-sm" style="background: #ef4444; color: #fff;">
+          Да, удалить
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer>
     Spotify Playlist Composer &bull; Cloudflare Workers &bull; Powered by Spotify Web API
   </footer>
@@ -1203,15 +1772,40 @@ Depeche Mode - Enjoy the Silence"></textarea>
       'playlist-modify-public',
       'playlist-modify-private',
       'user-read-private',
-      'user-read-email'
+      'user-read-email',
+      'ugc-image-upload'
     ].join(' ');
 
     let currentToken = null;
     let currentUser = null;
     let cachedPlaylists = [];
     let isPublicSelection = false;
+    let currentViewMode = localStorage.getItem('sp_view_mode') || 'large';
+    let playlistToDeleteId = null;
 
-    // Elements
+    // Composer review state
+    let reviewState = {
+      playlistName: '',
+      playlistDesc: '',
+      isPublic: false,
+      foundTracks: [],
+      notFoundTracks: []
+    };
+
+    // Editor state
+    let editingState = {
+      id: null,
+      name: '',
+      description: '',
+      isPublic: false,
+      coverUrl: null,
+      newCoverBase64: null,
+      tracks: [],
+      paletteIndex: 0
+    };
+    let draggedTrackIndex = null;
+
+    // Elements - Common & Views
     const viewLanding = document.getElementById('view-landing');
     const viewDashboard = document.getElementById('view-dashboard');
     const headerUserZone = document.getElementById('header-user-zone');
@@ -1226,12 +1820,17 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const btnLogin = document.getElementById('btn-login');
     const btnRefresh = document.getElementById('btn-refresh');
     const btnOpenComposer = document.getElementById('btn-open-composer');
-    const playlistsGrid = document.getElementById('playlists-grid');
+    const playlistsContainer = document.getElementById('playlists-container');
     const playlistSearchInput = document.getElementById('playlist-search-input');
     const playlistsCountBadge = document.getElementById('playlists-count-badge');
     const dashboardUserGreeting = document.getElementById('dashboard-user-greeting');
 
-    // Modal elements
+    // View Switcher Elements
+    const btnViewList = document.getElementById('btn-view-list');
+    const btnViewCompact = document.getElementById('btn-view-compact');
+    const btnViewLarge = document.getElementById('btn-view-large');
+
+    // Composer Modal Elements
     const composerModal = document.getElementById('composer-modal');
     const btnCloseModal = document.getElementById('btn-close-modal');
     const btnCancelModal = document.getElementById('btn-cancel-modal');
@@ -1267,6 +1866,36 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const successSummaryText = document.getElementById('success-summary-text');
     const btnOpenSpotifyLink = document.getElementById('btn-open-spotify-link');
     const btnCreateAnother = document.getElementById('btn-create-another');
+
+    // Editor Modal Elements
+    const editorModal = document.getElementById('editor-modal');
+    const btnCloseEditorModal = document.getElementById('btn-close-editor-modal');
+    const btnCancelEditor = document.getElementById('btn-cancel-editor');
+    const btnSaveEditor = document.getElementById('btn-save-editor');
+    const btnDeletePlaylistTrigger = document.getElementById('btn-delete-playlist-trigger');
+    const editorCoverPreview = document.getElementById('editor-cover-preview');
+    const editorCoverPlaceholder = document.getElementById('editor-cover-placeholder');
+    const editorFileInput = document.getElementById('editor-file-input');
+    const btnUploadCover = document.getElementById('btn-upload-cover');
+    const btnGenerateCover = document.getElementById('btn-generate-cover');
+    const editorCoverStatus = document.getElementById('editor-cover-status');
+    const coverCanvas = document.getElementById('cover-canvas');
+    const editorNameInput = document.getElementById('editor-name-input');
+    const editorDescInput = document.getElementById('editor-desc-input');
+    const editorVisPrivate = document.getElementById('editor-vis-private');
+    const editorVisPublic = document.getElementById('editor-vis-public');
+    const editorTrackSearchInput = document.getElementById('editor-track-search-input');
+    const btnEditorSearchTrack = document.getElementById('btn-editor-search-track');
+    const editorSearchResults = document.getElementById('editor-search-results');
+    const editorTracksCount = document.getElementById('editor-tracks-count');
+    const editorTracksList = document.getElementById('editor-tracks-list');
+
+    // Delete Modal Elements
+    const deleteModal = document.getElementById('delete-modal');
+    const btnCloseDeleteModal = document.getElementById('btn-close-delete-modal');
+    const btnCancelDelete = document.getElementById('btn-cancel-delete');
+    const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+    const deletePlaylistName = document.getElementById('delete-playlist-name');
 
     function getActiveRedirectUri() {
       return localStorage.getItem('sp_redirect_uri') || (window.location.origin + '/');
@@ -1327,6 +1956,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
         }
       });
 
+      // View mode toggles
+      setViewMode(currentViewMode, false);
+      btnViewList.addEventListener('click', () => setViewMode('list'));
+      btnViewCompact.addEventListener('click', () => setViewMode('compact'));
+      btnViewLarge.addEventListener('click', () => setViewMode('large'));
+
       // Handle OAuth Redirect Callback (?code=... or error)
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
@@ -1365,6 +2000,24 @@ Depeche Mode - Enjoy the Silence"></textarea>
           copyStatusLabel.textContent = '';
         }
       }, 3000);
+    }
+
+    // View Mode Switching
+    function setViewMode(mode, doRender = true) {
+      currentViewMode = mode;
+      localStorage.setItem('sp_view_mode', mode);
+
+      [btnViewList, btnViewCompact, btnViewLarge].forEach(btn => {
+        if (btn) btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+
+      if (playlistsContainer) {
+        playlistsContainer.className = 'playlists-container view-mode-' + mode;
+      }
+
+      if (doRender && cachedPlaylists.length) {
+        renderPlaylists(getFilteredPlaylists());
+      }
     }
 
     // PKCE Helper Functions
@@ -1598,16 +2251,15 @@ Depeche Mode - Enjoy the Silence"></textarea>
     }
 
     async function loadPlaylists() {
-      playlistsGrid.innerHTML = '<div class="empty-state">Загрузка плейлистов...</div>';
+      playlistsContainer.innerHTML = '<div class="empty-state">Загрузка плейлистов...</div>';
       try {
         const data = await spotifyApi('/me/playlists?limit=50');
         cachedPlaylists = data.items || [];
         playlistsCountBadge.textContent = cachedPlaylists.length;
-        renderPlaylists(cachedPlaylists);
-        // Fetch track dates asynchronously to enrich cards with creation/oldest track dates
+        renderPlaylists(getFilteredPlaylists());
         enrichPlaylistDates();
       } catch (err) {
-        playlistsGrid.innerHTML = \`<div class="empty-state" style="color: var(--danger);">Ошибка загрузки: \${escapeHtml(err.message)}</div>\`;
+        playlistsContainer.innerHTML = \`<div class="empty-state" style="color: var(--danger);">Ошибка загрузки: \${escapeHtml(err.message)}</div>\`;
       }
     }
 
@@ -1617,8 +2269,8 @@ Depeche Mode - Enjoy the Silence"></textarea>
           const tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=items(added_at)\`);
           if (tracksData?.items?.[0]?.added_at) {
             const dateStr = formatDate(tracksData.items[0].added_at);
-            const dateElem = document.getElementById(\`date-\${pl.id}\`);
-            if (dateElem) dateElem.textContent = dateStr;
+            const dateElems = document.querySelectorAll(\`.date-\${pl.id}\`);
+            dateElems.forEach(el => el.textContent = dateStr);
           }
         } catch (e) {
           // ignore background date fetch error
@@ -1626,13 +2278,33 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }
     }
 
+    function getFilteredPlaylists() {
+      const q = (playlistSearchInput.value || '').toLowerCase().trim();
+      if (!q) return cachedPlaylists;
+      return cachedPlaylists.filter(pl =>
+        (pl.name && pl.name.toLowerCase().includes(q)) ||
+        (pl.description && pl.description.toLowerCase().includes(q))
+      );
+    }
+
     function renderPlaylists(playlists) {
       if (!playlists.length) {
-        playlistsGrid.innerHTML = '<div class="empty-state">Плейлистов пока нет. Нажмите «Создать плейлист», чтобы добавить первый!</div>';
+        playlistsContainer.innerHTML = '<div class="empty-state">Плейлистов не найдено. Нажмите «Создать плейлист», чтобы добавить новый!</div>';
         return;
       }
 
-      playlistsGrid.innerHTML = playlists.map(pl => {
+      if (currentViewMode === 'compact') {
+        renderCompactPlaylists(playlists);
+      } else if (currentViewMode === 'list') {
+        renderListPlaylists(playlists);
+      } else {
+        renderLargePlaylists(playlists);
+      }
+    }
+
+    // View Mode 1: Large Cards
+    function renderLargePlaylists(playlists) {
+      playlistsContainer.innerHTML = playlists.map(pl => {
         const cover = pl.images?.[0]?.url;
         const coverHtml = cover
           ? \`<img class="playlist-cover" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
@@ -1648,7 +2320,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         const spotifyUrl = pl.external_urls?.spotify || '#';
 
         return \`
-          <a class="playlist-card" href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener">
+          <div class="playlist-card" onclick="openEditorModal('\${pl.id}')" style="cursor: pointer;">
             <div class="playlist-cover-wrap">
               \${coverHtml}
             </div>
@@ -1661,9 +2333,100 @@ Depeche Mode - Enjoy the Silence"></textarea>
                 \${isPublic ? '🌐 Публичный' : '🔒 Закрытый'}
               </span>
               <span>\${totalTracks} \${trackNoun}</span>
-              <span class="playlist-date" id="date-\${pl.id}">Плейлист</span>
+              <span class="playlist-date date-\${pl.id}">Плейлист</span>
             </div>
-          </a>
+            <div class="large-card-actions" onclick="event.stopPropagation();">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openEditorModal('\${pl.id}')" title="Редактировать плейлист">
+                ✏️ Редактировать
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить плейлист">
+                🗑️
+              </button>
+              <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="margin-left: auto;" title="Открыть в Spotify">
+                В Spotify ↗
+              </a>
+            </div>
+          </div>
+        \`;
+      }).join('');
+    }
+
+    // View Mode 2: Compact iPhone-style App Icons
+    function renderCompactPlaylists(playlists) {
+      playlistsContainer.innerHTML = playlists.map(pl => {
+        const cover = pl.images?.[0]?.url;
+        const coverHtml = cover
+          ? \`<img class="compact-cover-img" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
+          : \`<div class="playlist-cover-fallback" style="width: 100%; height: 100%;">
+              <svg style="width: 28px; height: 28px; fill: currentColor;" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+             </div>\`;
+
+        const totalTracks = pl.tracks?.total || 0;
+        const trackNoun = getTrackNoun(totalTracks);
+
+        return \`
+          <div class="compact-item" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)} (\${totalTracks} \${trackNoun})">
+            <div class="compact-cover-wrap">
+              \${coverHtml}
+              <div class="compact-actions-overlay" onclick="event.stopPropagation();">
+                <button type="button" class="compact-btn-edit" title="Редактировать" onclick="openEditorModal('\${pl.id}')">✏️</button>
+                <button type="button" class="compact-btn-edit" title="Удалить" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')">✕</button>
+              </div>
+            </div>
+            <div class="compact-title">\${escapeHtml(pl.name)}</div>
+            <div class="compact-tracks-count">\${totalTracks} \${trackNoun}</div>
+          </div>
+        \`;
+      }).join('');
+    }
+
+    // View Mode 3: List View
+    function renderListPlaylists(playlists) {
+      playlistsContainer.innerHTML = playlists.map(pl => {
+        const cover = pl.images?.[0]?.url;
+        const coverHtml = cover
+          ? \`<img class="list-row-cover" src="\${escapeHtml(cover)}" loading="lazy" alt="Cover">\`
+          : \`<div class="playlist-cover-fallback" style="width: 44px; height: 44px; border-radius: 8px;">
+              <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+              </svg>
+             </div>\`;
+
+        const isPublic = pl.public !== false;
+        const totalTracks = pl.tracks?.total || 0;
+        const trackNoun = getTrackNoun(totalTracks);
+        const spotifyUrl = pl.external_urls?.spotify || '#';
+
+        return \`
+          <div class="list-row-item">
+            <div class="list-row-left" onclick="openEditorModal('\${pl.id}')" style="cursor: pointer;">
+              \${coverHtml}
+              <div class="list-row-info">
+                <div class="list-row-title">\${escapeHtml(pl.name)}</div>
+                <div class="list-row-desc">\${escapeHtml(pl.description || 'Без описания')}</div>
+              </div>
+            </div>
+            <div class="list-row-meta">
+              <span class="badge-status \${isPublic ? 'badge-public' : 'badge-private'}">
+                \${isPublic ? '🌐' : '🔒'}
+              </span>
+              <span>\${totalTracks} \${trackNoun}</span>
+              <span class="playlist-date date-\${pl.id}">Плейлист</span>
+            </div>
+            <div class="list-row-actions">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openEditorModal('\${pl.id}')" title="Редактировать">
+                ✏️ Редактировать
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" style="color: #f87171;" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">
+                🗑️
+              </button>
+              <a href="\${escapeHtml(spotifyUrl)}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" title="Открыть в Spotify">
+                ↗
+              </a>
+            </div>
+          </div>
         \`;
       }).join('');
     }
@@ -1683,17 +2446,541 @@ Depeche Mode - Enjoy the Silence"></textarea>
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
+    function formatDuration(ms) {
+      if (!ms) return '0:00';
+      const totalSec = Math.floor(ms / 1000);
+      const min = Math.floor(totalSec / 60);
+      const sec = totalSec % 60;
+      return min + ':' + (sec < 10 ? '0' : '') + sec;
+    }
+
     // Search filter
-    playlistSearchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const filtered = cachedPlaylists.filter(pl =>
-        (pl.name && pl.name.toLowerCase().includes(q)) ||
-        (pl.description && pl.description.toLowerCase().includes(q))
-      );
-      renderPlaylists(filtered);
+    playlistSearchInput.addEventListener('input', () => {
+      renderPlaylists(getFilteredPlaylists());
     });
 
     btnRefresh.addEventListener('click', loadPlaylists);
+
+    // ==========================================
+    // PLAYLIST EDITOR MODAL LOGIC
+    // ==========================================
+
+    window.openEditorModal = async function(playlistId) {
+      editorModal.classList.add('open');
+      editorNameInput.value = 'Загрузка...';
+      editorDescInput.value = '';
+      editorTracksCount.textContent = '0';
+      editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 20px;">Загрузка треков плейлиста...</div>';
+      editorCoverPreview.style.display = 'none';
+      editorCoverPlaceholder.style.display = 'flex';
+      editorCoverStatus.textContent = '';
+      editorSearchResults.style.display = 'none';
+      editorSearchResults.innerHTML = '';
+      editorTrackSearchInput.value = '';
+
+      editingState = {
+        id: playlistId,
+        name: '',
+        description: '',
+        isPublic: false,
+        coverUrl: null,
+        newCoverBase64: null,
+        tracks: [],
+        paletteIndex: 0
+      };
+
+      try {
+        const plData = await spotifyApi('/playlists/' + playlistId);
+        editingState.id = plData.id;
+        editingState.name = plData.name || '';
+        editingState.description = plData.description || '';
+        editingState.isPublic = plData.public !== false;
+        editingState.coverUrl = plData.images?.[0]?.url || null;
+
+        editorNameInput.value = editingState.name;
+        editorDescInput.value = editingState.description;
+
+        updateEditorVisChips(editingState.isPublic);
+
+        if (editingState.coverUrl) {
+          editorCoverPreview.src = editingState.coverUrl;
+          editorCoverPreview.style.display = 'block';
+          editorCoverPlaceholder.style.display = 'none';
+        }
+
+        const tracksData = await spotifyApi('/playlists/' + playlistId + '/tracks?limit=100');
+        const rawItems = tracksData?.items || [];
+        editingState.tracks = rawItems
+          .filter(item => item && item.track)
+          .map(item => {
+            const tr = item.track;
+            const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+            const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
+            return {
+              id: tr.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
+              uri: tr.uri,
+              name: tr.name,
+              artists: artists,
+              durationMs: tr.duration_ms,
+              image: img
+            };
+          });
+
+        renderEditorTracks();
+      } catch (err) {
+        console.error('Failed to load playlist for editing:', err);
+        alert('Не удалось загрузить данные плейлиста: ' + err.message);
+        editorModal.classList.remove('open');
+      }
+    };
+
+    function updateEditorVisChips(isPublic) {
+      editingState.isPublic = isPublic;
+      if (isPublic) {
+        editorVisPublic.classList.add('selected');
+        editorVisPrivate.classList.remove('selected');
+      } else {
+        editorVisPrivate.classList.add('selected');
+        editorVisPublic.classList.remove('selected');
+      }
+    }
+
+    editorVisPrivate.addEventListener('click', () => updateEditorVisChips(false));
+    editorVisPublic.addEventListener('click', () => updateEditorVisChips(true));
+
+    function closeEditorModal() {
+      editorModal.classList.remove('open');
+    }
+
+    btnCloseEditorModal.addEventListener('click', closeEditorModal);
+    btnCancelEditor.addEventListener('click', closeEditorModal);
+
+    function renderEditorTracks() {
+      editorTracksCount.textContent = editingState.tracks.length;
+
+      if (!editingState.tracks.length) {
+        editorTracksList.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 24px;">В этом плейлисте нет треков. Найдите и добавьте треки выше!</div>';
+        return;
+      }
+
+      editorTracksList.innerHTML = editingState.tracks.map((t, idx) => \`
+        <div class="editor-track-row" draggable="true" data-index="\${idx}">
+          <div class="drag-handle" title="Перетащите, чтобы изменить порядок">☰</div>
+          <div class="track-num">\${idx + 1}</div>
+          \${t.image ? \`<img src="\${escapeHtml(t.image)}" class="editor-track-thumb" alt="Thumb">\` : '<div class="editor-track-thumb"></div>'}
+          <div class="editor-track-info">
+            <div class="editor-track-title" title="\${escapeHtml(t.name)}">\${escapeHtml(t.name)}</div>
+            <div class="editor-track-artist" title="\${escapeHtml(t.artists)}">\${escapeHtml(t.artists)}</div>
+          </div>
+          <div class="editor-track-duration">\${formatDuration(t.durationMs)}</div>
+          <div class="editor-track-moves">
+            <button type="button" class="btn-move" title="Переместить вверх" onclick="moveEditorTrack(\${idx}, -1)" \${idx === 0 ? 'disabled' : ''}>▲</button>
+            <button type="button" class="btn-move" title="Переместить вниз" onclick="moveEditorTrack(\${idx}, 1)" \${idx === editingState.tracks.length - 1 ? 'disabled' : ''}>▼</button>
+          </div>
+          <button type="button" class="btn-icon btn-icon-danger" title="Удалить из плейлиста" style="padding: 4px 8px; font-size: 0.75rem;" onclick="removeEditorTrack(\${idx})">✕</button>
+        </div>
+      \`).join('');
+
+      const rows = editorTracksList.querySelectorAll('.editor-track-row');
+      rows.forEach(row => {
+        row.addEventListener('dragstart', (e) => {
+          draggedTrackIndex = parseInt(row.dataset.index);
+          row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        row.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          row.classList.add('drag-over');
+        });
+
+        row.addEventListener('dragleave', () => {
+          row.classList.remove('drag-over');
+        });
+
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          row.classList.remove('drag-over');
+          const targetIndex = parseInt(row.dataset.index);
+          if (draggedTrackIndex !== null && draggedTrackIndex !== targetIndex) {
+            reorderEditorTracks(draggedTrackIndex, targetIndex);
+          }
+        });
+
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          rows.forEach(r => r.classList.remove('drag-over'));
+          draggedTrackIndex = null;
+        });
+      });
+    }
+
+    window.moveEditorTrack = function(idx, delta) {
+      const target = idx + delta;
+      if (target >= 0 && target < editingState.tracks.length) {
+        reorderEditorTracks(idx, target);
+      }
+    };
+
+    window.removeEditorTrack = function(idx) {
+      editingState.tracks.splice(idx, 1);
+      renderEditorTracks();
+    };
+
+    function reorderEditorTracks(fromIdx, toIdx) {
+      if (fromIdx === null || toIdx === null || fromIdx === toIdx) return;
+      const [item] = editingState.tracks.splice(fromIdx, 1);
+      editingState.tracks.splice(toIdx, 0, item);
+      draggedTrackIndex = null;
+      renderEditorTracks();
+    }
+
+    // Inline Search & Add Track in Editor
+    async function searchEditorTrack() {
+      const q = editorTrackSearchInput.value.trim();
+      if (!q) return;
+
+      btnEditorSearchTrack.disabled = true;
+      btnEditorSearchTrack.textContent = '⏳';
+
+      try {
+        const res = await spotifyApi('/search?q=' + encodeURIComponent(q) + '&type=track&limit=5');
+        const items = res?.tracks?.items || [];
+        if (!items.length) {
+          editorSearchResults.innerHTML = '<div style="color: var(--text-muted); font-size: 0.8rem; padding: 8px;">Ничего не найдено</div>';
+          editorSearchResults.style.display = 'block';
+          return;
+        }
+
+        window._editorSearchMatches = items;
+        editorSearchResults.innerHTML = items.map((t, idx) => {
+          const artists = t.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+          const img = t.album?.images?.[t.album.images.length - 1]?.url || '';
+          return \`
+            <div class="editor-search-item">
+              <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1;">
+                \${img ? \`<img src="\${escapeHtml(img)}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover;">\` : ''}
+                <div style="overflow: hidden;">
+                  <div style="font-size: 0.82rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">\${escapeHtml(t.name)}</div>
+                  <div style="font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">\${escapeHtml(artists)}</div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.72rem; padding: 3px 8px;" onclick="addTrackToEditor(\${idx})">
+                ＋ Добавить
+              </button>
+            </div>
+          \`;
+        }).join('');
+        editorSearchResults.style.display = 'flex';
+      } catch (err) {
+        editorSearchResults.innerHTML = \`<div style="color: #f87171; font-size: 0.8rem; padding: 8px;">Ошибка поиска: \${escapeHtml(err.message)}</div>\`;
+        editorSearchResults.style.display = 'block';
+      } finally {
+        btnEditorSearchTrack.disabled = false;
+        btnEditorSearchTrack.textContent = '🔍 Искать';
+      }
+    }
+
+    btnEditorSearchTrack.addEventListener('click', searchEditorTrack);
+    editorTrackSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchEditorTrack();
+      }
+    });
+
+    window.addTrackToEditor = function(matchIdx) {
+      const match = window._editorSearchMatches?.[matchIdx];
+      if (!match) return;
+
+      const artists = match.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+      const img = match.album?.images?.[match.album.images.length - 1]?.url || '';
+
+      editingState.tracks.push({
+        id: match.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
+        uri: match.uri,
+        name: match.name,
+        artists: artists,
+        durationMs: match.duration_ms,
+        image: img
+      });
+
+      renderEditorTracks();
+      editorSearchResults.style.display = 'none';
+      editorTrackSearchInput.value = '';
+    };
+
+    // Custom Photo Upload via File Input
+    btnUploadCover.addEventListener('click', () => editorFileInput.click());
+
+    editorFileInput.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const ctx = coverCanvas.getContext('2d');
+          coverCanvas.width = 640;
+          coverCanvas.height = 640;
+
+          // Square center crop
+          const minSide = Math.min(img.width, img.height);
+          const sx = (img.width - minSide) / 2;
+          const sy = (img.height - minSide) / 2;
+          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 640, 640);
+
+          const dataUrl = coverCanvas.toDataURL('image/jpeg', 0.82);
+          const base64 = dataUrl.replace(/^data:image\/jpeg;base64,/, '');
+          editingState.newCoverBase64 = base64;
+
+          editorCoverPreview.src = dataUrl;
+          editorCoverPreview.style.display = 'block';
+          editorCoverPlaceholder.style.display = 'none';
+          editorCoverStatus.textContent = '✅ Фото готово к сохранению';
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Procedural Cover Generator
+    const COVER_PALETTES = [
+      { bg1: '#0f0c29', bg2: '#302b63', bg3: '#24243e', accent: '#00ff87', text: '#ffffff', motif: 'vinyl' },
+      { bg1: '#ff416c', bg2: '#ff4b2b', bg3: '#8a2387', accent: '#ffe600', text: '#ffffff', motif: 'waves' },
+      { bg1: '#111827', bg2: '#1f2937', bg3: '#10b981', accent: '#10b981', text: '#ffffff', motif: 'equalizer' },
+      { bg1: '#1a102f', bg2: '#4a154b', bg3: '#6b11ff', accent: '#00f2fe', text: '#ffffff', motif: 'geometry' },
+      { bg1: '#093028', bg2: '#1e4d2b', bg3: '#237a57', accent: '#d4af37', text: '#ffffff', motif: 'abstract' },
+      { bg1: '#141e30', bg2: '#243b55', bg3: '#00c6ff', accent: '#ff758c', text: '#ffffff', motif: 'circles' }
+    ];
+
+    btnGenerateCover.addEventListener('click', () => {
+      const palette = COVER_PALETTES[editingState.paletteIndex % COVER_PALETTES.length];
+      editingState.paletteIndex++;
+
+      const ctx = coverCanvas.getContext('2d');
+      coverCanvas.width = 640;
+      coverCanvas.height = 640;
+
+      // 1. Dynamic Angular Gradient
+      const grad = ctx.createLinearGradient(0, 0, 640, 640);
+      grad.addColorStop(0, palette.bg1);
+      grad.addColorStop(0.5, palette.bg2);
+      grad.addColorStop(1, palette.bg3);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 640, 640);
+
+      // 2. Artistic Motif
+      ctx.save();
+      if (palette.motif === 'vinyl') {
+        for (let r = 80; r <= 280; r += 32) {
+          ctx.beginPath();
+          ctx.arc(320, 260, r, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.arc(320, 260, 48, 0, Math.PI * 2);
+        ctx.fillStyle = palette.accent;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(320, 260, 14, 0, Math.PI * 2);
+        ctx.fillStyle = palette.bg1;
+        ctx.fill();
+      } else if (palette.motif === 'waves' || palette.motif === 'equalizer') {
+        const bars = 22;
+        const barWidth = 14;
+        const gap = 10;
+        const totalW = bars * (barWidth + gap);
+        const startX = (640 - totalW) / 2;
+        for (let b = 0; b < bars; b++) {
+          const h = Math.abs(Math.sin((b / bars) * Math.PI * 3 + editingState.paletteIndex)) * 140 + 24;
+          ctx.fillStyle = b % 2 === 0 ? palette.accent : 'rgba(255, 255, 255, 0.35)';
+          ctx.beginPath();
+          ctx.rect(startX + b * (barWidth + gap), 280 - h / 2, barWidth, h);
+          ctx.fill();
+        }
+      } else {
+        const g1 = ctx.createRadialGradient(220, 220, 20, 220, 220, 280);
+        g1.addColorStop(0, palette.accent);
+        g1.addColorStop(1, 'transparent');
+        ctx.globalAlpha = 0.45;
+        ctx.fillStyle = g1;
+        ctx.beginPath();
+        ctx.arc(220, 220, 280, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+
+      // 3. Dark gradient overlay for text readability
+      const textBackdrop = ctx.createLinearGradient(0, 340, 0, 640);
+      textBackdrop.addColorStop(0, 'rgba(0,0,0,0)');
+      textBackdrop.addColorStop(0.5, 'rgba(0,0,0,0.65)');
+      textBackdrop.addColorStop(1, 'rgba(0,0,0,0.92)');
+      ctx.fillStyle = textBackdrop;
+      ctx.fillRect(0, 340, 640, 300);
+
+      // 4. Typography
+      const title = editorNameInput.value.trim() || 'Playlist';
+      ctx.fillStyle = palette.text;
+      ctx.font = 'bold 44px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+
+      const words = title.split(' ');
+      let lines = [];
+      let currentLine = words[0] || '';
+      for (let i = 1; i < words.length; i++) {
+        const testLine = currentLine + ' ' + words[i];
+        if (ctx.measureText(testLine).width < 540) {
+          currentLine = testLine;
+        } else {
+          lines.push(currentLine);
+          currentLine = words[i];
+          if (lines.length >= 2) break;
+        }
+      }
+      lines.push(currentLine);
+
+      let textY = 490 - (lines.length - 1) * 24;
+      for (const line of lines) {
+        ctx.fillText(line, 48, textY);
+        textY += 50;
+      }
+
+      ctx.fillStyle = palette.accent;
+      ctx.font = '600 20px -apple-system, BlinkMacSystemFont, sans-serif';
+      const trackCount = editingState.tracks.length;
+      ctx.fillText(trackCount + ' ' + getTrackNoun(trackCount) + ' • Spotify Mix', 48, textY + 8);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = '700 13px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('COMPOSER EDITION', 48, 64);
+
+      // Export to base64 JPEG
+      const dataUrl = coverCanvas.toDataURL('image/jpeg', 0.85);
+      const base64 = dataUrl.replace(/^data:image\/jpeg;base64,/, '');
+      editingState.newCoverBase64 = base64;
+
+      editorCoverPreview.src = dataUrl;
+      editorCoverPreview.style.display = 'block';
+      editorCoverPlaceholder.style.display = 'none';
+      editorCoverStatus.textContent = '🎨 Обложка создана! (нажмите еще для другого стиля)';
+    });
+
+    // Save Playlist
+    btnSaveEditor.addEventListener('click', async () => {
+      const name = editorNameInput.value.trim();
+      if (!name) {
+        alert('Пожалуйста, укажите название плейлиста');
+        editorNameInput.focus();
+        return;
+      }
+
+      btnSaveEditor.disabled = true;
+      btnSaveEditor.textContent = '⏳ Сохранение...';
+
+      try {
+        const id = editingState.id;
+        const description = editorDescInput.value.trim();
+        const isPublic = editingState.isPublic;
+
+        // 1. Update metadata
+        await spotifyApi('/playlists/' + id, {
+          method: 'PUT',
+          body: JSON.stringify({
+            name: name,
+            description: description,
+            public: isPublic
+          })
+        });
+
+        // 2. Update track order atomically
+        const uris = editingState.tracks.map(t => t.uri);
+        await spotifyApi('/playlists/' + id + '/tracks', {
+          method: 'PUT',
+          body: JSON.stringify({ uris: uris.slice(0, 100) })
+        });
+
+        // 3. Update cover image if newly generated or uploaded
+        if (editingState.newCoverBase64) {
+          try {
+            await fetch('https://api.spotify.com/v1/playlists/' + id + '/images', {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'Bearer ' + currentToken,
+                'Content-Type': 'image/jpeg'
+              },
+              body: editingState.newCoverBase64
+            });
+          } catch (imgErr) {
+            console.warn('Cover upload issue:', imgErr);
+            alert('Плейлист и треки обновлены! Обложку не удалось загрузить: для загрузки обложек требуется перелогиниться в аккаунт через кнопку «Выйти», чтобы обновить права доступа Spotify.');
+          }
+        }
+
+        closeEditorModal();
+        await loadPlaylists();
+      } catch (err) {
+        console.error('Save editor error:', err);
+        alert('Ошибка при сохранении изменений: ' + err.message);
+      } finally {
+        btnSaveEditor.disabled = false;
+        btnSaveEditor.textContent = '💾 Сохранить изменения';
+      }
+    });
+
+    // ==========================================
+    // DELETE PLAYLIST MODAL
+    // ==========================================
+
+    window.promptDeletePlaylist = function(id, name) {
+      playlistToDeleteId = id;
+      deletePlaylistName.textContent = '«' + (name || 'Плейлист') + '»';
+      deleteModal.classList.add('open');
+    };
+
+    btnDeletePlaylistTrigger.addEventListener('click', () => {
+      if (!editingState.id) return;
+      promptDeletePlaylist(editingState.id, editorNameInput.value);
+    });
+
+    btnCancelDelete.addEventListener('click', () => {
+      deleteModal.classList.remove('open');
+      playlistToDeleteId = null;
+    });
+
+    btnCloseDeleteModal.addEventListener('click', () => {
+      deleteModal.classList.remove('open');
+      playlistToDeleteId = null;
+    });
+
+    btnConfirmDelete.addEventListener('click', async () => {
+      if (!playlistToDeleteId) return;
+      btnConfirmDelete.disabled = true;
+      btnConfirmDelete.textContent = '⏳ Удаление...';
+
+      try {
+        await spotifyApi('/playlists/' + playlistToDeleteId + '/followers', {
+          method: 'DELETE'
+        });
+
+        cachedPlaylists = cachedPlaylists.filter(p => p.id !== playlistToDeleteId);
+        playlistsCountBadge.textContent = cachedPlaylists.length;
+        renderPlaylists(getFilteredPlaylists());
+
+        deleteModal.classList.remove('open');
+        editorModal.classList.remove('open');
+      } catch (err) {
+        alert('Ошибка удаления: ' + err.message);
+      } finally {
+        btnConfirmDelete.disabled = false;
+        btnConfirmDelete.textContent = 'Да, удалить';
+        playlistToDeleteId = null;
+      }
+    });
 
     // Modal Controls
     btnOpenComposer.addEventListener('click', () => {
@@ -2110,6 +3397,15 @@ Depeche Mode - Enjoy the Silence"></textarea>
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function escapeJsString(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;')
+        .replace(/\\n/g, ' ');
     }
   </script>
 </body>
