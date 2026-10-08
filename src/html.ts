@@ -469,40 +469,43 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       color: var(--text-subtle);
     }
 
-    /* Direct On-Cover Mini Badges & Actions */
-    .cover-privacy-badge {
+    /* Direct On-Cover Mini Badges & Actions (Large cards) */
+    .cover-warning-badge {
       position: absolute;
       top: 6px;
       left: 6px;
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0, 0, 0, 0.82);
       backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.65);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.72rem;
-      color: #fff;
       z-index: 4;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
       pointer-events: none;
     }
 
     .cover-actions-overlay {
       position: absolute;
-      top: 6px;
-      right: 6px;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      gap: 4px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       z-index: 5;
-      opacity: 0.85;
+      opacity: 0.88;
       transition: opacity 0.15s ease, transform 0.15s ease;
     }
 
     .playlist-card:hover .cover-actions-overlay {
       opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
     }
 
     .cover-action-btn {
@@ -731,15 +734,57 @@ export function renderAppHtml(clientConfig: { defaultClientId?: string }): strin
       object-fit: cover;
     }
 
-    .list-privacy-badge {
-      position: absolute;
-      bottom: 1px;
-      right: 1px;
-      font-size: 0.58rem;
-      background: rgba(0, 0, 0, 0.7);
+    .list-row-center-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    .list-row-center-spacer {
+      flex: 0;
+    }
+
+    .warning-circle-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      padding: 1px;
+      background: rgba(245, 158, 11, 0.25);
+      font-size: 0.68rem;
       line-height: 1;
+    }
+
+    .warning-author-text {
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: #fbbf24;
+      white-space: nowrap;
+    }
+
+    .btn-copy-inline {
+      padding: 3px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-copy-inline:hover {
+      background: var(--spotify-green);
+      border-color: var(--spotify-green);
+      color: #000;
     }
 
     .list-row-info {
@@ -1900,12 +1945,15 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       <div class="modal-footer" style="padding: 12px 20px;">
         <button type="button" id="btn-delete-playlist-trigger" class="btn btn-secondary btn-sm" style="color: #f87171; border-color: rgba(239, 68, 68, 0.3);">
-          🗑️ Удалить
+          Удалить
         </button>
         <div style="display: flex; gap: 8px;">
           <button type="button" id="btn-cancel-editor" class="btn btn-secondary btn-sm">Отмена</button>
+          <button type="button" id="btn-copy-editor" class="btn btn-spotify btn-sm" style="display: none;">
+            Создать копию
+          </button>
           <button type="button" id="btn-save-editor" class="btn btn-spotify btn-sm">
-            💾 Сохранить
+            Сохранить
           </button>
         </div>
       </div>
@@ -1930,7 +1978,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       <div class="modal-footer">
         <button id="btn-cancel-delete" class="btn btn-secondary btn-sm">Отмена</button>
         <button id="btn-confirm-delete" class="btn btn-spotify btn-sm" style="background: #ef4444; color: #fff;">
-          Да, удалить
+          Удалить
         </button>
       </div>
     </div>
@@ -2050,6 +2098,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
     const btnCloseEditorModal = document.getElementById('btn-close-editor-modal');
     const btnCancelEditor = document.getElementById('btn-cancel-editor');
     const btnSaveEditor = document.getElementById('btn-save-editor');
+    const btnCopyEditor = document.getElementById('btn-copy-editor');
     const btnDeletePlaylistTrigger = document.getElementById('btn-delete-playlist-trigger');
     const editorCoverPreview = document.getElementById('editor-cover-preview');
     const editorCoverPlaceholder = document.getElementById('editor-cover-placeholder');
@@ -2368,7 +2417,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       headerUserZone.innerHTML = '';
     }
 
-    async function spotifyApi(path, options = {}) {
+    async function spotifyApi(path, options = {}, retryCount = 0) {
       if (!currentToken) throw new Error('Not authenticated');
       let res = await fetch('https://api.spotify.com/v1' + path, {
         ...options,
@@ -2384,11 +2433,21 @@ Depeche Mode - Enjoy the Silence"></textarea>
         if (tokenData && tokenData.refresh_token) {
           const ok = await refreshToken(tokenData.refresh_token);
           if (ok) {
-            return spotifyApi(path, options);
+            return spotifyApi(path, options, retryCount);
           }
         }
         logout();
         throw new Error('Session expired');
+      }
+
+      // Handle 429 Too Many Requests with backoff & Retry-After header
+      if (res.status === 429 && retryCount < 3) {
+        const retryHeader = res.headers.get('Retry-After');
+        const waitSec = retryHeader ? parseInt(retryHeader, 10) : (retryCount + 1) * 2;
+        const waitMs = Math.min(Math.max(waitSec, 1) * 1000, 6000);
+        console.warn(\`Spotify 429 rate limit hit on \${path}. Waiting \${waitMs}ms before retry #\${retryCount + 1}...\`);
+        await new Promise(r => setTimeout(r, waitMs));
+        return spotifyApi(path, options, retryCount + 1);
       }
 
       if (!res.ok) {
@@ -2398,6 +2457,12 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
       if (res.status === 204) return null;
       return res.json();
+    }
+
+    function isUserPlaylistOwner(pl) {
+      if (!pl || !pl.owner) return true;
+      if (!currentUser || !currentUser.id) return true;
+      return pl.owner.id === currentUser.id;
     }
 
     async function initializeDashboard() {
@@ -2450,6 +2515,9 @@ Depeche Mode - Enjoy the Silence"></textarea>
       try {
         const data = await spotifyApi('/me/playlists?limit=50');
         cachedPlaylists = data.items || [];
+        cachedPlaylists.forEach(pl => {
+          pl.tracksCount = getPlaylistTrackCount(pl);
+        });
         playlistsCountBadge.textContent = cachedPlaylists.length;
         renderPlaylists(getFilteredPlaylists());
         enrichPlaylistDates();
@@ -2459,24 +2527,16 @@ Depeche Mode - Enjoy the Silence"></textarea>
     }
 
     async function enrichPlaylistDates() {
-      const batchSize = 6;
+      // Gentle background enrichment for dates (batch of 2 with 250ms sleep to avoid 429 rate limit)
+      const batchSize = 2;
       for (let i = 0; i < cachedPlaylists.length; i += batchSize) {
         const batch = cachedPlaylists.slice(i, i + batchSize);
+        let stopDueToError = false;
         await Promise.all(batch.map(async pl => {
           try {
-            let tracksData = null;
-            try {
-              tracksData = await spotifyApi(\`/playlists/\${pl.id}/items?limit=1&fields=total,items(added_at)\`);
-            } catch (_) {
-              try {
-                tracksData = await spotifyApi(\`/playlists/\${pl.id}/tracks?limit=1&fields=total,items(added_at)\`);
-              } catch (_) {
-                tracksData = await spotifyApi(\`/playlists/\${pl.id}?fields=total,tracks.total,items.total\`);
-              }
-            }
-
-            const count = tracksData?.total ?? tracksData?.tracks?.total ?? tracksData?.items?.total ?? tracksData?.items?.length;
-            if (typeof count === 'number') {
+            const tracksData = await spotifyApi(\`/playlists/\${pl.id}/items?limit=1&fields=total,items(added_at)\`);
+            const count = tracksData?.total ?? tracksData?.items?.length;
+            if (typeof count === 'number' && typeof pl.tracksCount !== 'number') {
               pl.tracksCount = count;
               const noun = getTrackNoun(count);
               document.querySelectorAll(\`.tracks-count-\${pl.id}\`).forEach(el => {
@@ -2491,9 +2551,14 @@ Depeche Mode - Enjoy the Silence"></textarea>
               });
             }
           } catch (e) {
-            // ignore individual playlist enrichment error
+            stopDueToError = true;
           }
         }));
+        if (stopDueToError) {
+          // If 429 or network errors occur, preserve user quota and stop background enrich
+          break;
+        }
+        await new Promise(r => setTimeout(r, 250));
       }
     }
 
@@ -2533,7 +2598,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
               </svg>
              </div>\`;
 
-        const isPublic = pl.public !== false;
+        const isOwner = isUserPlaylistOwner(pl);
         const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
         const spotifyUrl = pl.external_urls?.spotify || '#';
@@ -2542,11 +2607,13 @@ Depeche Mode - Enjoy the Silence"></textarea>
           <div class="playlist-card" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)}">
             <div class="playlist-cover-wrap">
               \${coverHtml}
-              <!-- Mini Privacy Indicator On Cover -->
-              <div class="cover-privacy-badge" title="\${isPublic ? 'Публичный плейлист' : 'Закрытый плейлист'}">
-                \${isPublic ? '🌐' : '🔒'}
-              </div>
-              <!-- Mini Action Icons On Cover -->
+              <!-- Mini Warning Indicator On Cover If Not Owned By User -->
+              \${!isOwner ? \`
+                <div class="cover-warning-badge" title="⚠️ Плейлист другого автора (\${escapeHtml(pl.owner?.display_name || 'Spotify')})">
+                  ⚠️
+                </div>
+              \` : ''}
+              <!-- Action Icons In Bottom Center Of Cover -->
               <div class="cover-actions-overlay" onclick="event.stopPropagation();">
                 <button type="button" class="cover-action-btn" onclick="openEditorModal('\${pl.id}')" title="Редактировать">✏️</button>
                 <button type="button" class="cover-action-btn btn-danger" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">🗑️</button>
@@ -2566,7 +2633,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }).join('');
     }
 
-    // View Mode 2: Compact iPhone-style App Icons
+    // View Mode 2: Compact iPhone-style App Icons (Clean with no overlay icons)
     function renderCompactPlaylists(playlists) {
       playlistsContainer.innerHTML = playlists.map(pl => {
         const cover = pl.images?.[0]?.url;
@@ -2578,7 +2645,6 @@ Depeche Mode - Enjoy the Silence"></textarea>
               </svg>
              </div>\`;
 
-        const isPublic = pl.public !== false;
         const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
 
@@ -2586,15 +2652,6 @@ Depeche Mode - Enjoy the Silence"></textarea>
           <div class="compact-item" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)} (\${totalTracks} \${trackNoun})">
             <div class="compact-cover-wrap">
               \${coverHtml}
-              <!-- Mini Privacy Indicator On Cover -->
-              <div class="compact-privacy-badge" title="\${isPublic ? 'Публичный' : 'Закрытый'}">
-                \${isPublic ? '🌐' : '🔒'}
-              </div>
-              <!-- Mini Action Icons On Cover -->
-              <div class="compact-actions-overlay" onclick="event.stopPropagation();">
-                <button type="button" class="compact-btn-edit" title="Редактировать" onclick="openEditorModal('\${pl.id}')">✏️</button>
-                <button type="button" class="compact-btn-edit btn-danger" title="Удалить" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')">✕</button>
-              </div>
             </div>
             <div class="compact-title">\${escapeHtml(pl.name)}</div>
             <div class="compact-tracks-count tracks-count-\${pl.id}">\${totalTracks} \${trackNoun}</div>
@@ -2615,17 +2672,24 @@ Depeche Mode - Enjoy the Silence"></textarea>
               </svg>
              </div>\`;
 
-        const isPublic = pl.public !== false;
+        const isOwner = isUserPlaylistOwner(pl);
         const totalTracks = getPlaylistTrackCount(pl);
         const trackNoun = getTrackNoun(totalTracks);
         const spotifyUrl = pl.external_urls?.spotify || '#';
+
+        const authorNotice = !isOwner ? \`
+          <div class="list-row-center-badge" onclick="event.stopPropagation();">
+            <span class="warning-circle-badge">⚠️</span>
+            <span class="warning-author-text">⚠️ Плейлист другого автора (\${escapeHtml(pl.owner?.display_name || 'Spotify')})</span>
+            <button type="button" class="btn-copy-inline" onclick="copyPlaylist('\${pl.id}')">Создать копию</button>
+          </div>
+        \` : '<div class="list-row-center-spacer"></div>';
 
         return \`
           <div class="list-row-item">
             <div class="list-row-left" onclick="openEditorModal('\${pl.id}')" title="\${escapeHtml(pl.name)}">
               <div class="list-cover-wrap">
                 \${coverHtml}
-                <span class="list-privacy-badge" title="\${isPublic ? 'Публичный' : 'Закрытый'}">\${isPublic ? '🌐' : '🔒'}</span>
               </div>
               <div class="list-row-info">
                 <div class="list-row-title">\${escapeHtml(pl.name)}</div>
@@ -2636,6 +2700,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
                 </div>
               </div>
             </div>
+            \${authorNotice}
             <div class="list-row-actions" onclick="event.stopPropagation();">
               <button type="button" class="cover-action-btn" onclick="openEditorModal('\${pl.id}')" title="Редактировать">✏️</button>
               <button type="button" class="cover-action-btn btn-danger" onclick="promptDeletePlaylist('\${pl.id}', '\${escapeJsString(pl.name)}')" title="Удалить">🗑️</button>
@@ -2704,6 +2769,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         coverUrl: cached.images?.[0]?.url || null,
         newCoverBase64: null,
         tracks: [],
+        tracksModified: false,
         paletteIndex: 0,
         isOwner: isOwner
       };
@@ -2718,10 +2784,8 @@ Depeche Mode - Enjoy the Silence"></textarea>
       if (headerTitle) headerTitle.textContent = editingState.name || 'Плейлист';
       if (headerCount) headerCount.textContent = \`\${initialTracksCount} \${getTrackNoun(initialTracksCount)}\`;
 
-      editorNameInput.oninput = () => {
-        const val = editorNameInput.value.trim();
-        if (headerTitle) headerTitle.textContent = val || 'Плейлист';
-      };
+      // Header title remains intact until save is clicked (per user requirements)
+      editorNameInput.oninput = null;
 
       updateEditorVisChips(editingState.isPublic);
 
@@ -2731,16 +2795,18 @@ Depeche Mode - Enjoy the Silence"></textarea>
         editorCoverPlaceholder.style.display = 'none';
       }
 
-      // If user does not own this playlist, adjust controls and show notice
+      // If user does not own this playlist, adjust controls and show notice + Copy button
       const visToggle = document.getElementById('editor-vis-toggle');
       if (!isOwner) {
         btnSaveEditor.style.display = 'none';
+        if (btnCopyEditor) btnCopyEditor.style.display = 'inline-flex';
         if (btnUploadCover) btnUploadCover.style.display = 'none';
         if (btnGenerateCover) btnGenerateCover.style.display = 'none';
         if (visToggle) visToggle.style.display = 'none';
         editorCoverStatus.innerHTML = '<span style="color: var(--warning);">⚠️ Плейлист другого автора (' + escapeHtml(cached.owner?.display_name || 'Spotify') + ')</span>';
       } else {
         btnSaveEditor.style.display = 'inline-flex';
+        if (btnCopyEditor) btnCopyEditor.style.display = 'none';
         if (btnUploadCover) btnUploadCover.style.display = 'flex';
         if (btnGenerateCover) btnGenerateCover.style.display = 'flex';
         if (visToggle) visToggle.style.display = 'flex';
@@ -2927,6 +2993,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
     window.removeEditorTrack = function(idx) {
       editingState.tracks.splice(idx, 1);
+      editingState.tracksModified = true;
       renderEditorTracks();
     };
 
@@ -2934,6 +3001,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       if (fromIdx === null || toIdx === null || fromIdx === toIdx) return;
       const [item] = editingState.tracks.splice(fromIdx, 1);
       editingState.tracks.splice(toIdx, 0, item);
+      editingState.tracksModified = true;
       draggedTrackIndex = null;
       renderEditorTracks();
     }
@@ -3008,6 +3076,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         image: img
       });
 
+      editingState.tracksModified = true;
       renderEditorTracks();
       editorSearchResults.style.display = 'none';
       editorTrackSearchInput.value = '';
@@ -3182,7 +3251,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
       }
 
       btnSaveEditor.disabled = true;
-      btnSaveEditor.textContent = '⏳ Сохранение...';
+      btnSaveEditor.textContent = 'Сохранение...';
 
       try {
         const id = editingState.id;
@@ -3199,18 +3268,21 @@ Depeche Mode - Enjoy the Silence"></textarea>
           })
         });
 
-        // 2. Update track order atomically
-        const uris = editingState.tracks.map(t => t.uri);
-        try {
-          await spotifyApi('/playlists/' + id + '/items', {
-            method: 'PUT',
-            body: JSON.stringify({ uris: uris.slice(0, 100) })
-          });
-        } catch (eItems) {
-          await spotifyApi('/playlists/' + id + '/tracks', {
-            method: 'PUT',
-            body: JSON.stringify({ uris: uris.slice(0, 100) })
-          });
+        // 2. Update track order atomically ONLY if tracks were actually modified
+        if (editingState.tracksModified) {
+          const uris = editingState.tracks.map(t => t.uri).filter(Boolean);
+          try {
+            await spotifyApi('/playlists/' + id + '/items', {
+              method: 'PUT',
+              body: JSON.stringify({ uris: uris.slice(0, 100) })
+            });
+          } catch (eItems) {
+            await spotifyApi('/playlists/' + id + '/tracks', {
+              method: 'PUT',
+              body: JSON.stringify({ uris: uris.slice(0, 100) })
+            });
+          }
+          editingState.tracksModified = false;
         }
 
         // 3. Update cover image if newly generated or uploaded
@@ -3224,11 +3296,18 @@ Depeche Mode - Enjoy the Silence"></textarea>
               },
               body: editingState.newCoverBase64
             });
+            editingState.newCoverBase64 = null;
           } catch (imgErr) {
             console.warn('Cover upload issue:', imgErr);
-            alert('Плейлист и треки обновлены! Обложку не удалось загрузить: для загрузки обложек требуется перелогиниться в аккаунт через кнопку «Выйти», чтобы обновить права доступа Spotify.');
+            alert('Плейлист обновлен! Обложку не удалось загрузить: для загрузки обложек требуется перелогиниться в аккаунт через кнопку «Выйти», чтобы обновить права доступа Spotify.');
           }
         }
+
+        // 4. Update header title upon successful save
+        const headerTitle = document.getElementById('editor-header-title');
+        if (headerTitle) headerTitle.textContent = name;
+        editingState.name = name;
+        editingState.description = description;
 
         closeEditorModal();
         await loadPlaylists();
@@ -3237,9 +3316,102 @@ Depeche Mode - Enjoy the Silence"></textarea>
         alert('Ошибка при сохранении изменений: ' + err.message);
       } finally {
         btnSaveEditor.disabled = false;
-        btnSaveEditor.textContent = '💾 Сохранить изменения';
+        btnSaveEditor.textContent = 'Сохранить';
       }
     });
+
+    // Copy Other Author Playlist to User Library
+    window.copyPlaylist = async function(playlistId) {
+      const pl = cachedPlaylists.find(p => p.id === playlistId) || {};
+      const targetName = (editingState && editingState.id === playlistId && editorNameInput.value.trim())
+        ? editorNameInput.value.trim() + ' (Копия)'
+        : ((pl.name || 'Плейлист') + ' (Копия)');
+      const targetDesc = (editingState && editingState.id === playlistId && editorDescInput)
+        ? editorDescInput.value.trim()
+        : (pl.description || '');
+
+      if (btnCopyEditor) {
+        btnCopyEditor.disabled = true;
+        btnCopyEditor.textContent = 'Копирование...';
+      }
+
+      try {
+        // 1. Gather track URIs
+        let trackUris = [];
+        if (editingState && editingState.id === playlistId && editingState.tracks && editingState.tracks.length > 0) {
+          trackUris = editingState.tracks.map(t => t.uri).filter(Boolean);
+        } else {
+          try {
+            const res = await spotifyApi(\`/playlists/\${playlistId}/items?limit=100\`);
+            const raw = res?.items || [];
+            trackUris = raw.map(i => (i.track || i.item)?.uri).filter(Boolean);
+          } catch (_) {
+            try {
+              const res = await spotifyApi(\`/playlists/\${playlistId}/tracks?limit=100\`);
+              const raw = res?.items || [];
+              trackUris = raw.map(i => (i.track || i.item)?.uri).filter(Boolean);
+            } catch (eTr) {
+              console.warn('Tracks fetch for copy error:', eTr);
+            }
+          }
+        }
+
+        // 2. Create new playlist for current user
+        const newPl = await spotifyApi('/me/playlists', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: targetName,
+            description: targetDesc,
+            public: false
+          })
+        });
+
+        if (!newPl || !newPl.id) {
+          throw new Error('Spotify не создал новый плейлист');
+        }
+
+        // 3. Add tracks in batches of 100
+        if (trackUris.length > 0) {
+          for (let i = 0; i < trackUris.length; i += 100) {
+            const batch = trackUris.slice(i, i + 100);
+            try {
+              await spotifyApi(\`/playlists/\${newPl.id}/items\`, {
+                method: 'POST',
+                body: JSON.stringify({ uris: batch })
+              });
+            } catch (_) {
+              await spotifyApi(\`/playlists/\${newPl.id}/tracks\`, {
+                method: 'POST',
+                body: JSON.stringify({ uris: batch })
+              });
+            }
+          }
+        }
+
+        // 4. Reload user playlists so copy is included
+        await loadPlaylists();
+
+        // 5. Open new playlist in editor
+        await openEditorModal(newPl.id);
+        alert(\`Создана копия плейлиста: «\${targetName}»! Теперь вы являетесь владельцем этого плейлиста и можете редактировать его.\`);
+      } catch (err) {
+        console.error('Copy playlist error:', err);
+        alert('Ошибка при создании копии плейлиста: ' + err.message);
+      } finally {
+        if (btnCopyEditor) {
+          btnCopyEditor.disabled = false;
+          btnCopyEditor.textContent = 'Создать копию';
+        }
+      }
+    };
+
+    if (btnCopyEditor) {
+      btnCopyEditor.addEventListener('click', () => {
+        if (editingState.id) {
+          copyPlaylist(editingState.id);
+        }
+      });
+    }
 
     // ==========================================
     // DELETE PLAYLIST MODAL
@@ -3269,7 +3441,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
     btnConfirmDelete.addEventListener('click', async () => {
       if (!playlistToDeleteId) return;
       btnConfirmDelete.disabled = true;
-      btnConfirmDelete.textContent = '⏳ Удаление...';
+      btnConfirmDelete.textContent = 'Удаление...';
 
       try {
         await spotifyApi('/playlists/' + playlistToDeleteId + '/followers', {
@@ -3286,7 +3458,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         alert('Ошибка удаления: ' + err.message);
       } finally {
         btnConfirmDelete.disabled = false;
-        btnConfirmDelete.textContent = 'Да, удалить';
+        btnConfirmDelete.textContent = 'Удалить';
         playlistToDeleteId = null;
       }
     });
