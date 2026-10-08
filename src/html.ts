@@ -2745,6 +2745,93 @@ Depeche Mode - Enjoy the Silence"></textarea>
     // PLAYLIST EDITOR MODAL LOGIC
     // ==========================================
 
+    // Robust Playlist Track Fetcher (Supports official API + Worker Proxy for external playlists)
+    async function fetchPlaylistTracks(playlistId, plData = null) {
+      // 1. Check if plData already has track items
+      if (plData?.tracks?.items && Array.isArray(plData.tracks.items) && plData.tracks.items.length > 0) {
+        return plData.tracks.items
+          .filter(item => item && (item.track || item.item))
+          .map(item => {
+            const tr = item.track || item.item;
+            const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+            const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
+            return {
+              id: tr.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
+              uri: tr.uri,
+              name: tr.name,
+              artists: artists,
+              durationMs: tr.duration_ms,
+              image: img
+            };
+          });
+      }
+
+      // 2. Try official Spotify API /items
+      try {
+        const res = await spotifyApi('/playlists/' + playlistId + '/items?limit=100');
+        const raw = res?.items || [];
+        if (raw.length > 0) {
+          return raw
+            .filter(item => item && (item.track || item.item))
+            .map(item => {
+              const tr = item.track || item.item;
+              const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+              const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
+              return {
+                id: tr.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
+                uri: tr.uri,
+                name: tr.name,
+                artists: artists,
+                durationMs: tr.duration_ms,
+                image: img
+              };
+            });
+        }
+      } catch (eItems) {
+        console.warn('/playlists/.../items failed:', eItems);
+      }
+
+      // 3. Try legacy endpoint /tracks
+      try {
+        const res = await spotifyApi('/playlists/' + playlistId + '/tracks?limit=100');
+        const raw = res?.items || [];
+        if (raw.length > 0) {
+          return raw
+            .filter(item => item && (item.track || item.item))
+            .map(item => {
+              const tr = item.track || item.item;
+              const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
+              const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
+              return {
+                id: tr.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
+                uri: tr.uri,
+                name: tr.name,
+                artists: artists,
+                durationMs: tr.duration_ms,
+                image: img
+              };
+            });
+        }
+      } catch (eTracks) {
+        console.warn('/playlists/.../tracks failed:', eTracks);
+      }
+
+      // 4. Fallback for external/non-owned playlists: Worker proxy /api/public-playlist
+      try {
+        const proxyRes = await fetch('/api/public-playlist?id=' + encodeURIComponent(playlistId));
+        if (proxyRes.ok) {
+          const data = await proxyRes.json();
+          if (data?.ok && Array.isArray(data.tracks) && data.tracks.length > 0) {
+            return data.tracks;
+          }
+        }
+      } catch (eProxy) {
+        console.warn('/api/public-playlist proxy failed:', eProxy);
+      }
+
+      return [];
+    }
+
     window.openEditorModal = async function(playlistId) {
       editorModal.classList.add('open');
       editorCoverPreview.style.display = 'none';
@@ -2835,51 +2922,13 @@ Depeche Mode - Enjoy the Silence"></textarea>
         console.warn('Playlist metadata fetch:', eMeta);
       }
 
-      // 3. Fetch tracks using /items (New 2026 API) or /tracks (legacy fallback) or plData.tracks
-      let rawItems = null;
-      if (plData?.tracks?.items && Array.isArray(plData.tracks.items) && plData.tracks.items.length > 0) {
-        rawItems = plData.tracks.items;
-      } else if (plData?.items?.items && Array.isArray(plData.items.items)) {
-        rawItems = plData.items.items;
-      }
-
-      if (!rawItems) {
-        try {
-          // Official 2026 endpoint
-          const res = await spotifyApi('/playlists/' + playlistId + '/items?limit=100');
-          rawItems = res?.items || [];
-        } catch (eItems) {
-          console.warn('/playlists/.../items failed:', eItems);
-          try {
-            // Legacy endpoint fallback
-            const res = await spotifyApi('/playlists/' + playlistId + '/tracks?limit=100');
-            rawItems = res?.items || [];
-          } catch (eTracks) {
-            console.warn('/playlists/.../tracks failed:', eTracks);
-          }
-        }
-      }
-
-      if (rawItems && Array.isArray(rawItems)) {
-        editingState.tracks = rawItems
-          .filter(item => item && (item.track || item.item))
-          .map(item => {
-            const tr = item.track || item.item;
-            const artists = tr.artists?.map(a => a.name).join(', ') || 'Неизвестный исполнитель';
-            const img = tr.album?.images?.[tr.album.images.length - 1]?.url || tr.album?.images?.[0]?.url || '';
-            return {
-              id: tr.id || ('tr_' + Math.random().toString(36).substring(2, 9)),
-              uri: tr.uri,
-              name: tr.name,
-              artists: artists,
-              durationMs: tr.duration_ms,
-              image: img
-            };
-          });
-
+      // 3. Fetch tracks using fetchPlaylistTracks (robust against 403 Forbidden)
+      const tracks = await fetchPlaylistTracks(playlistId, plData);
+      if (tracks && tracks.length > 0) {
+        editingState.tracks = tracks;
         renderEditorTracks();
       } else {
-        editorTracksList.innerHTML = '<div style="color: var(--warning); text-align: center; padding: 24px; font-size: 0.85rem; line-height: 1.5;">⚠️ Spotify не предоставил доступ к списку треков для этого плейлиста (Forbidden).<br><span style="font-size: 0.76rem; color: var(--text-muted);">Spotify блокирует прямое чтение треков для чужих или алгоритмических плейлистов. Вы можете удалить этот плейлист из своей медиатеки кнопкой ниже.</span></div>';
+        editorTracksList.innerHTML = '<div style="color: var(--warning); text-align: center; padding: 24px; font-size: 0.85rem; line-height: 1.5;">В этом плейлисте нет доступных треков для отображения.</div>';
       }
     };
 
@@ -3330,6 +3379,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
         ? editorDescInput.value.trim()
         : (pl.description || '');
 
+      const btnCopyEditor = document.getElementById('btn-copy-editor');
       if (btnCopyEditor) {
         btnCopyEditor.disabled = true;
         btnCopyEditor.textContent = 'Копирование...';
@@ -3340,51 +3390,60 @@ Depeche Mode - Enjoy the Silence"></textarea>
         let trackUris = [];
         if (editingState && editingState.id === playlistId && editingState.tracks && editingState.tracks.length > 0) {
           trackUris = editingState.tracks.map(t => t.uri).filter(Boolean);
-        } else {
-          try {
-            const res = await spotifyApi(\`/playlists/\${playlistId}/items?limit=100\`);
-            const raw = res?.items || [];
-            trackUris = raw.map(i => (i.track || i.item)?.uri).filter(Boolean);
-          } catch (_) {
-            try {
-              const res = await spotifyApi(\`/playlists/\${playlistId}/tracks?limit=100\`);
-              const raw = res?.items || [];
-              trackUris = raw.map(i => (i.track || i.item)?.uri).filter(Boolean);
-            } catch (eTr) {
-              console.warn('Tracks fetch for copy error:', eTr);
-            }
-          }
+        }
+
+        if (trackUris.length === 0) {
+          const fetched = await fetchPlaylistTracks(playlistId);
+          trackUris = fetched.map(t => t.uri).filter(Boolean);
+        }
+
+        if (trackUris.length === 0) {
+          throw new Error('Не удалось получить список треков из оригинального плейлиста для копирования.');
         }
 
         // 2. Create new playlist for current user
-        const newPl = await spotifyApi('/me/playlists', {
-          method: 'POST',
-          body: JSON.stringify({
-            name: targetName,
-            description: targetDesc,
-            public: false
-          })
-        });
+        let newPl = null;
+        try {
+          newPl = await spotifyApi('/me/playlists', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: targetName,
+              description: targetDesc,
+              public: false
+            })
+          });
+        } catch (eMe) {
+          if (currentUser?.id) {
+            newPl = await spotifyApi('/users/' + encodeURIComponent(currentUser.id) + '/playlists', {
+              method: 'POST',
+              body: JSON.stringify({
+                name: targetName,
+                description: targetDesc,
+                public: false
+              })
+            });
+          } else {
+            throw eMe;
+          }
+        }
 
         if (!newPl || !newPl.id) {
           throw new Error('Spotify не создал новый плейлист');
         }
 
         // 3. Add tracks in batches of 100
-        if (trackUris.length > 0) {
-          for (let i = 0; i < trackUris.length; i += 100) {
-            const batch = trackUris.slice(i, i + 100);
-            try {
-              await spotifyApi(\`/playlists/\${newPl.id}/items\`, {
-                method: 'POST',
-                body: JSON.stringify({ uris: batch })
-              });
-            } catch (_) {
-              await spotifyApi(\`/playlists/\${newPl.id}/tracks\`, {
-                method: 'POST',
-                body: JSON.stringify({ uris: batch })
-              });
-            }
+        for (let i = 0; i < trackUris.length; i += 100) {
+          const batch = trackUris.slice(i, i + 100);
+          try {
+            await spotifyApi('/playlists/' + newPl.id + '/items', {
+              method: 'POST',
+              body: JSON.stringify({ uris: batch })
+            });
+          } catch (_) {
+            await spotifyApi('/playlists/' + newPl.id + '/tracks', {
+              method: 'POST',
+              body: JSON.stringify({ uris: batch })
+            });
           }
         }
 
@@ -3393,7 +3452,7 @@ Depeche Mode - Enjoy the Silence"></textarea>
 
         // 5. Open new playlist in editor
         await openEditorModal(newPl.id);
-        alert(\`Создана копия плейлиста: «\${targetName}»! Теперь вы являетесь владельцем этого плейлиста и можете редактировать его.\`);
+        alert(\`Создана копия плейлиста «\${targetName}» (\${trackUris.length} \${getTrackNoun(trackUris.length)})! Все треки успешно скопированы в вашу медиатеку.\`);
       } catch (err) {
         console.error('Copy playlist error:', err);
         alert('Ошибка при создании копии плейлиста: ' + err.message);
