@@ -2450,13 +2450,24 @@ Depeche Mode - Enjoy the Silence"></textarea>
         return spotifyApi(path, options, retryCount + 1);
       }
 
+      const text = await res.text();
+
       if (!res.ok) {
-        const errJson = await res.json().catch(() => ({}));
-        throw new Error(errJson.error?.message || 'Spotify API error ' + res.status);
+        let errMsg = 'Spotify API error ' + res.status;
+        try {
+          const errJson = JSON.parse(text);
+          if (errJson?.error?.message) errMsg = errJson.error.message;
+        } catch (_) {}
+        throw new Error(errMsg);
       }
 
-      if (res.status === 204) return null;
-      return res.json();
+      if (!text || !text.trim() || res.status === 204) return null;
+
+      try {
+        return JSON.parse(text);
+      } catch (_) {
+        return null;
+      }
     }
 
     function isUserPlaylistOwner(pl) {
